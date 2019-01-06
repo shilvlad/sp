@@ -1,6 +1,6 @@
-{# Load the tag library #}
-{% load bootstrap4 %}
+{% extends 'base.html' %}
 
+{% load bootstrap4 %}
 {# Load CSS and JavaScript #}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
@@ -11,7 +11,7 @@
 {# Display a form #}
 <form action="/login/" method="post" class="form">
   {% csrf_token %}
-  {% bootstrap_form form %}
+
   {% buttons %}
     <button type="submit" class="btn btn-primary">
       Submit
