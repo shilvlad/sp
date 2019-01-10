@@ -8,15 +8,8 @@
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
 
-{# Display a form #}
-<form action="/login/" method="post" class="form">
-  {% csrf_token %}
+{% block title %}
+    Главная
+{% endblock %}
 
-  {% buttons %}
-    <button type="submit" class="btn btn-primary">
-      Submit
-    </button>
-  {% endbuttons %}
-</form>
 
-{# Read the documentation for more information #}

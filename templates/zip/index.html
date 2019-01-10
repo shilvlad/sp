@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load bootstrap4 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block title %}
+    Заказ расходки
+{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-8 col-lg-9">
+            <h2>Формирование заказа</h2>
+            <p>Nullam quis risus eget <a href="#">urna mollis ornare</a> vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula.</p>
+            <p><small>This line of text is meant to be treated as fine print.</small></p>
+            <p>The following is <strong>rendered as bold text</strong>.</p>
+            <p>The following is <em>rendered as italicized text</em>.</p>
+            <p>An abbreviation of the word attribute is <abbr title="attribute">attr</abbr>.</p>
+
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h2>Сформированные заявки</h2>
+            <p>Nullam quis risus eget <a href="#">urna mollis ornare</a> vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula.</p>
+            <p><small>This line of text is meant to be treated as fine print.</small></p>
+            <p>The following is <strong>rendered as bold text</strong>.</p>
+            <p>The following is <em>rendered as italicized text</em>.</p>
+            <p>An abbreviation of the word attribute is <abbr title="attribute">attr</abbr>.</p>
+
+
+        </div>
+    </div>
+{% endblock %}
