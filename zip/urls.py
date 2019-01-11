@@ -5,6 +5,8 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.start, name='start'),
+    url(r'^record_delete/(?P<zip_record_id>[0-9]+)/$', views.record_delete, name='record_delete'),
+    url(r'^to_order/(?P<order_id>[0-9]+)/$', views.to_order, name='to_order'),
 #    url(r'^contacts/', views.contacts, name='contacts'),
 #    url(r'^userrequest/', views.userrequest, name='userrequest'),
 #    url(r'^login/', views.user_login, name='login'),

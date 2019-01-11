@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% load bootstrap4 %}
 {# Load CSS and JavaScript #}
 {% bootstrap_css %}
@@ -18,47 +18,77 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-1"></div>
-            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8">
-                <table class="table  table-hover table-sm">
-                    <thead>
-                    <tr>
-                        <th scope="col">№</th>
-                        <th scope="col">Наименование</th>
-                        <th scope="col">Количество</th>
-                        <th scope="col">Column 3</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <
-                    <tr>
-                        <th scope="row">Default</th>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-1">
 
-
-                <h2>Формирование заказа</h2>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-7">
+                <h3>Формирование заказа</h3>
 
                 <form action="/zip/" method="post" class="form" >
                     {% csrf_token %}
 
-                    {% bootstrap_form form layout='horizontal' size='small' exclude=' author, order_temp'%}
+                    {% bootstrap_form form layout='horizontal' size='small'%}
 
                     {% buttons submit='Добавить'%}{% endbuttons %}
                 </form>
+                <div class="alert alert-dismissible alert-primary">
+                    <h3>ЗАКАЗ № {{ current_order }}</h3>
+                    <form action="to_order/{{ current_order }}/" method="post" class="form" >
+                        {% csrf_token %}
+                        <table class="table  table-hover table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">№</th>
+                                <th scope="col">Наименование</th>
+                                <th scope="col">Количество</th>
+                                <th scope="col">Комментарий</th>
+                                <th scope="col"> </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for o in order %}
+                                <tr>
+                                    <th scope="row">{{forloop.counter}}</th>
+                                    <td>{{ o.zip }}</td>
+                                    <td>{{ o.amount }}</td>
+                                    <td>{{ o.comment }}</td>
+                                    <td><a href="record_delete/{{ o.id }}"><img src="{% static "\icons\delete.png" %} "</a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% if order.count  %}
+                            <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Заказ проверен, отправляем?');">Отправить заказ</button>
+                        {% endif %}
+                    </form>
+
+                </div>
+
+
 
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
-                <h2>Сформированные заявки</h2>
-                <p>Nullam quis risus eget <a href="#">urna mollis ornare</a> vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula.</p>
-                <p><small>This line of text is meant to be treated as fine print.</small></p>
-                <p>The following is <strong>rendered as bold text</strong>.</p>
-                <p>The following is <em>rendered as italicized text</em>.</p>
-                <p>An abbreviation of the word attribute is <abbr title="attribute">attr</abbr>.</p>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                <h4>Предыдущие заказы</h4>
+                {% for o in prev_orders %}
+                    <table class="table  table-hover table-sm">
+                        <thead>
+                        <tr>
+                            <h6>Заказ №{{ o.id }} от {{ o.date | date:"d.m.Y H:m"}}</h6>
+                        </tr>
+
+                        </thead>
+                        <tbody>
+
+                        {% for i in o.get_ziprecords.all %}
+                            <tr>
+                                <td>{{ i.zip }}</td>
+                                <td>{{ i.amount }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endfor %}
             </div>
             <div class="col-xs-12 col-sm-6 col-md-8 col-lg-1"></div>
         </div>

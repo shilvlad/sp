@@ -19,6 +19,8 @@
     <meta name="author" content="">
     <title>{% block title %}{% endblock %} &ndash; Tk Portal</title>
     {% load static %}
+    <script src="{% static "portal.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "portal.css" %} " />
 </head>
 
 
@@ -26,72 +28,39 @@
 
 
 
-{%  if user.is_authenticated %}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">TK</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">TK</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <div class="collapse navbar-collapse" id="navbarColor02">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Приложения<span class="caret"></span></a>
-                    <div class="dropdown-menu" aria-labelledby="themes">
-                        <a class="dropdown-item" href="../zip/">Заказ расходки</a>
-                    </div>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="../help/"></a>
-                </li>
-
-                {%if user.is_authenticated %}
-                    <li class="nav-item mr-sm-2">
-                        <a class="nav-link"  href="/logout">Выйти ({{ user.first_name }})</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
-
-
-
-
-
-    {% block content %}{% endblock %}
-
-
-{% else %}
-
-    <div class="row">
-
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
-            <div class="card text-white bg-dark mb-3" style="max-width: 30rem;">
-                <div class="card-header">Авторизация</div>
-                <div class="card-body">
-                    <form id="login_form" method="post" action="/login/">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="InputEmail">Имя</label>
-                            <input type="login" class="form-control" id="InputEmail" aria-describedby="emailHelp" placeholder="Введите имя" name="username">
-                            <small id="emailHelp" class="form-text text-muted">Вводите логин или Ваш email, в зависимости от способа регистрации</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="InputPassword">Пароль</label>
-                            <input type="password" class="form-control" id="InputPassword" placeholder="Пароль" name="password">
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Войти</button>
-                    </form>
+    <div class="collapse navbar-collapse" id="navbarColor02">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Приложения<span class="caret"></span></a>
+                <div class="dropdown-menu" aria-labelledby="themes">
+                    <a class="dropdown-item" href="../zip/">Заказ расходки</a>
                 </div>
-            </div>
+            </li>
 
-        </div>
+            <li class="nav-item">
+                <a class="nav-link" href="../help/"></a>
+            </li>
 
+            {%if user.is_authenticated %}
+                <li class="nav-item mr-sm-2">
+                    <a class="nav-link"  href="/accounts/logout">Выйти ({{ user.first_name }})</a>
+                </li>
+            {% endif %}
+        </ul>
     </div>
+</nav>
 
 
 
-{% endif %}
+
+
+{% block content %}{% endblock %}
+
+
+

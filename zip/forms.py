@@ -7,4 +7,7 @@ class ZipRecordForm(ModelForm):
         fields = '__all__'
         labels = {
             "zip": "Наименование",
+            "amount": "Количество",
+            "order": "Заказ",
+            "comment": "Комментарий",
         }
