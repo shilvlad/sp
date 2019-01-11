@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 
-from zip.models import ZipNames
+from .models import Profile
 
 # Register your models here.
-admin.site.register(ZipNames)
+admin.site.register(Profile)
+

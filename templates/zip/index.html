@@ -14,25 +14,45 @@
 
 
 {% block content %}
+
+
     <div class="container-fluid">
         <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-1"></div>
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8">
+                <table class="table  table-hover table-sm">
+                    <thead>
+                    <tr>
+                        <th scope="col">№</th>
+                        <th scope="col">Наименование</th>
+                        <th scope="col">Количество</th>
+                        <th scope="col">Column 3</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <
+                    <tr>
+                        <th scope="row">Default</th>
+                        <td>Column content</td>
+                        <td>Column content</td>
+                        <td>Column content</td>
+                    </tr>
+                    </tbody>
+                </table>
 
-            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-9">
+
                 <h2>Формирование заказа</h2>
 
-                <div class="form-group">
-                    <label for="Select1">Расходка</label>
-                    <select class="form-control" id="exampleSelect1">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
-                </div>
+                <form action="/zip/" method="post" class="form" >
+                    {% csrf_token %}
+
+                    {% bootstrap_form form layout='horizontal' size='small' exclude=' author, order_temp'%}
+
+                    {% buttons submit='Добавить'%}{% endbuttons %}
+                </form>
 
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
                 <h2>Сформированные заявки</h2>
                 <p>Nullam quis risus eget <a href="#">urna mollis ornare</a> vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula.</p>
                 <p><small>This line of text is meant to be treated as fine print.</small></p>
@@ -40,6 +60,7 @@
                 <p>The following is <em>rendered as italicized text</em>.</p>
                 <p>An abbreviation of the word attribute is <abbr title="attribute">attr</abbr>.</p>
             </div>
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-1"></div>
         </div>
     </div>
 {% endblock %}
