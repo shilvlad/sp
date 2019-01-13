@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.shortcuts import render
 from zip.forms import ZipRecordForm
 from django.shortcuts import render

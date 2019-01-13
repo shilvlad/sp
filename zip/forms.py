@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from zip.models import ZipRecord
 from django.forms import ModelForm
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render, redirect, HttpResponseRedirect, HttpResponse
