@@ -25,7 +25,7 @@ def start(request):
         current_order = ZipOrder.objects.filter(order_temp=True).get(author=request.user)
 
     ActualOrder = ZipRecord.objects.filter(order=current_order.id)
-    PreviousOrders = ZipOrder.objects.filter(author=request.user).filter(order_temp=False)
+    PreviousOrders = ZipOrder.objects.filter(author=request.user).filter(order_temp=False).order_by("-date")[0:5]
 
 
     if request.method == 'POST':
