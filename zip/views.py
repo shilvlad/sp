@@ -10,13 +10,12 @@ from zip.models import ZipNames, ZipRecord, ZipOrder
 from django.contrib.auth.decorators import login_required
 import datetime
 
-
-
-
-
 # Create your views here.
 @login_required
 def start(request):
+    
+
+
     context = {}
     try:
         current_order = ZipOrder.objects.filter(order_temp=True).get(author=request.user)
@@ -63,7 +62,7 @@ def record_delete(request, zip_record_id):
         return HttpResponse("Чужие заказы трогать низзя!")
     return HttpResponseRedirect('/zip')
 
-
+@login_required
 def to_order(request, order_id):
     try:
         tmp = ZipOrder.objects.get(id=order_id)

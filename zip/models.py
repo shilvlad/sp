@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import User
 
 # Create your models here.
 class ZipNames(models.Model):
@@ -29,5 +30,17 @@ class ZipRecord(models.Model):
     order = models.ForeignKey(ZipOrder, on_delete=models.CASCADE, default=0)
     comment = models.CharField(max_length=500, editable = True, blank=True)
     def __unicode__(self):
-        return str(self.id) + ". "+ str(self.zip) + " - " + str(self.amount) + " (Заказ: " + str(self.order) + ")"
+        return unicode(self.id) + ". " + unicode(self.zip) + " - " + unicode(self.amount)
 
+class ZipUsers(models.Model):
+    ROLES_CHOICES = (
+        ('teamlead', 'Руководитель группы'),
+        ('controller', 'Контролер'),
+        ('admin','Администратор')
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=100, choices=ROLES_CHOICES)
+    def __unicode__(self):
+        return str(self.user) + " - " + str(self.role)
+    def get_role(username):
+        return ZipUsers.objects.get(user.username = username).role
