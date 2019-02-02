@@ -16,6 +16,7 @@ class ZipOrder(models.Model):
     order_hidden = models.BooleanField(default=False)
     date = models.DateTimeField(blank=True, editable=False, null=True)
     date_hidden = models.DateTimeField(blank=True, editable=False, null=True)
+    date_closed = models.DateTimeField(blank=True, editable=False, null=True)
 
     def get_ziprecords(self):
         try:

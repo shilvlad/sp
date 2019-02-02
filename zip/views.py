@@ -21,7 +21,7 @@ def start(request):
     try:
         context['role'] = ZipUsers.objects.get(user=request.user.id).role
     except Exception:
-        return HttpResponse("Критическая ошибка контроля ролей. Обратитесь к администратору")
+        return HttpResponse("START. Критическая ошибка контроля ролей. Обратитесь к администратору")
 
     if context['role'] == 'teamlead':
         try:
@@ -54,7 +54,9 @@ def start(request):
         context['current_order'] = current_order.id
 
     if context['role'] == 'controller':
-        context['orders'] = ZipOrder.objects.filter(order_temp=False, order_closed=False).order_by("-date")
+        context['orders'] = ZipOrder.objects.filter(order_temp=False, order_closed=False, order_hidden=False).order_by("-date")
+        context['orders_closed'] = ZipOrder.objects.filter(order_temp=False, order_closed=True, order_hidden=False).order_by("-date")
+        context['orders_hidden'] = ZipOrder.objects.filter(order_temp=False, order_closed=True, order_hidden=True).order_by("-date")
 
     return render(request, 'zip/index.html', context)
 
@@ -92,6 +94,30 @@ def to_order(request, order_id):
         return HttpResponse("Чужие заказы трогать низзя!")
     return HttpResponseRedirect('/zip')
 
+@login_required
+def close_order(request, order_id):
+    try:
+        tmp = ZipOrder.objects.get(id=order_id)
+        print (tmp)
+    except Exception:
+        return HttpResponse("Getting order Exception recieved")
+
+    try:
+        role = ZipUsers.objects.get(user=request.user.id).role
+    except Exception:
+        return HttpResponse("HIDE_ORDER. Критическая ошибка контроля ролей. Обратитесь к администратору")
+
+    if tmp.order_closed == False and role == 'controller':
+        tmp.order_closed = True
+        tmp.order_hidden = False
+        tmp.date_hidden = datetime.datetime.now()
+        tmp.save()
+
+    else:
+        return HttpResponse("Критическая ошибка скрытия заказа")
+    return HttpResponseRedirect('/zip')
+
+@login_required
 def hide_order(request, order_id):
     try:
         tmp = ZipOrder.objects.get(id=order_id)
@@ -105,6 +131,7 @@ def hide_order(request, order_id):
         return HttpResponse("HIDE_ORDER. Критическая ошибка контроля ролей. Обратитесь к администратору")
 
     if tmp.order_hidden == False and role == 'controller':
+        tmp.order_closed = True
         tmp.order_hidden = True
         tmp.date_hidden = datetime.datetime.now()
         tmp.save()
@@ -112,3 +139,4 @@ def hide_order(request, order_id):
     else:
         return HttpResponse("Критическая ошибка скрытия заказа")
     return HttpResponseRedirect('/zip')
+
