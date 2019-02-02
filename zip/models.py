@@ -13,7 +13,10 @@ class ZipOrder(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     order_temp = models.BooleanField(default=True)
     order_closed = models.BooleanField(default=False)
+    order_hidden = models.BooleanField(default=False)
     date = models.DateTimeField(blank=True, editable=False, null=True)
+    date_hidden = models.DateTimeField(blank=True, editable=False, null=True)
+
     def get_ziprecords(self):
         try:
             tmp = ZipRecord.objects.filter(order=self)

@@ -22,16 +22,16 @@
             <div class="col-xs-12 col-sm-6 col-md-8 col-lg-7">
                 <h3>Формирование заказа</h3>
 
-                <form action="/zip/" method="post" class="form" >
+                <form action="/zip/" method="post" class="form">
                     {% csrf_token %}
 
-                    {% bootstrap_form form layout='horizontal' size='small'%}
+                    {% bootstrap_form form layout='horizontal' size='small' %}
 
-                    {% buttons submit='Добавить'%}{% endbuttons %}
+                    {% buttons submit='Добавить' %}{% endbuttons %}
                 </form>
                 <div class="alert alert-dismissible alert-primary">
                     <h3>ЗАКАЗ № {{ current_order }}</h3>
-                    <form action="to_order/{{ current_order }}/" method="post" class="form" >
+                    <form action="to_order/{{ current_order }}/" method="post" class="form">
                         {% csrf_token %}
                         <table class="table  table-hover table-sm">
                             <thead>
@@ -40,29 +40,31 @@
                                 <th scope="col">Наименование</th>
                                 <th scope="col">Количество</th>
                                 <th scope="col">Комментарий</th>
-                                <th scope="col"> </th>
+                                <th scope="col"></th>
                             </tr>
                             </thead>
                             <tbody>
 
                             {% for o in order %}
                                 <tr>
-                                    <th scope="row">{{forloop.counter}}</th>
+                                    <th scope="row">{{ forloop.counter }}</th>
                                     <td>{{ o.zip }}</td>
                                     <td>{{ o.amount }}</td>
                                     <td>{{ o.comment }}</td>
-                                    <td><a href="record_delete/{{ o.id }}"><img src="{% static "\icons\delete.png" %} "</a></td>
+                                    <td><a href="record_delete/{{ o.id }}"><img src="{% static "\icons\delete.png" %} "</a>
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
                         </table>
-                        {% if order.count  %}
-                            <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Заказ проверен, отправляем?');">Отправить заказ</button>
+                        {% if order.count %}
+                            <button type="submit" class="btn btn-primary btn-sm"
+                                    onclick="return confirm('Заказ проверен, отправляем?');">Отправить заказ
+                            </button>
                         {% endif %}
                     </form>
 
                 </div>
-
 
 
             </div>
@@ -72,7 +74,7 @@
                     <table class="table  table-hover table-sm">
                         <thead>
                         <tr>
-                            <h6>Заказ №{{ o.id }} от {{ o.date | date:"d.m.Y H:m"}}</h6>
+                            <h6>Заказ №{{ o.id }} от {{ o.date | date:"d.m.Y H:m" }}</h6>
                         </tr>
 
                         </thead>
@@ -100,29 +102,42 @@
 
             </div>
             <div class="col-xs-12 col-sm-6 col-md-8 col-lg-7">
-                <h3>Заказы</h3>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                <h4>Предыдущие заказы</h4>
-                {% for o in prev_orders %}
+                <h4><center>Заказы (незакрытые)</center></h4>
+                {% for order in orders %}
+                    <h5>Заказ №{{ order.id }} | {{ order.author }}
+                        <button type="button" class="btn btn-info btn-sm">Заказан</button>
+                        <button type="button" class="btn btn-warning btn-sm">Выдан</button>
+                    </h5>
                     <table class="table  table-hover table-sm">
                         <thead>
                         <tr>
-                            <h6>Заказ №{{ o.id }} от {{ o.date | date:"d.m.Y H:m"}}</h6>
-                        </tr>
+                            <th scope="col">№</th>
 
+                            <th scope="col">Наименование</th>
+                            <th scope="col">Количество</th>
+                            <th scope="col">Комментарий</th>
+                            <th scope="col"></th>
+                        </tr>
                         </thead>
                         <tbody>
 
-                        {% for i in o.get_ziprecords.all %}
+                        {% for o in order.get_ziprecords %}
                             <tr>
-                                <td>{{ i.zip }}</td>
-                                <td>{{ i.amount }}</td>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ o.zip }}</td>
+                                <td>{{ o.amount }}</td>
+                                <td>{{ o.comment }}</td>
+                                <td></a>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 {% endfor %}
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                <h4>Предыдущие заказы</h4>
+
             </div>
             <div class="col-xs-12 col-sm-6 col-md-8 col-lg-1"></div>
         </div>

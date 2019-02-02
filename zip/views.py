@@ -18,39 +18,44 @@ import perm
 def start(request):
 
     context = {}
-
-
     try:
         context['role'] = ZipUsers.objects.get(user=request.user.id).role
-
-        current_order = ZipOrder.objects.filter(order_temp=True).get(author=request.user)
     except Exception:
-        tmp = ZipOrder()
-        tmp.author = User.objects.get(username=request.user)
-        tmp.save()
-        current_order = ZipOrder.objects.filter(order_temp=True).get(author=request.user)
+        return HttpResponse("Критическая ошибка контроля ролей. Обратитесь к администратору")
 
-    ActualOrder = ZipRecord.objects.filter(order=current_order.id)
-    PreviousOrders = ZipOrder.objects.filter(author=request.user).filter(order_temp=False).order_by("-date")[0:5]
+    if context['role'] == 'teamlead':
+        try:
+            current_order = ZipOrder.objects.filter(order_temp=True).get(author=request.user)
+        except Exception:
+            tmp = ZipOrder()
+            tmp.author = User.objects.get(username=request.user)
+            tmp.save()
+            current_order = ZipOrder.objects.filter(order_temp=True).get(author=request.user)
 
+        ActualOrder = ZipRecord.objects.filter(order=current_order.id)
+        PreviousOrders = ZipOrder.objects.filter(author=request.user).filter(order_temp=False).order_by("-date")[0:5]
 
-    if request.method == 'POST':
-        form = ZipRecordForm(request.POST)
-        if form.is_valid():
-            form.save()
+        if request.method == 'POST':
+            form = ZipRecordForm(request.POST)
+            if form.is_valid():
+                form.save()
 
-            return HttpResponseRedirect('/zip')
+                return HttpResponseRedirect('/zip')
+            else:
+                print("непонятная ситуация")
         else:
-            print("непонятная ситуация")
-    else:
-        form = ZipRecordForm()
-        form.fields['order'].queryset = ZipOrder.objects.filter(author=request.user).filter(order_temp=True)
-        form.fields['order'].empty_label = None
+            form = ZipRecordForm()
+            form.fields['order'].queryset = ZipOrder.objects.filter(author=request.user).filter(order_temp=True)
+            form.fields['order'].empty_label = None
 
-    context['form'] = form
-    context['order'] = ActualOrder
-    context['prev_orders'] = PreviousOrders
-    context['current_order'] = current_order.id
+        context['form'] = form
+        context['order'] = ActualOrder
+        context['prev_orders'] = PreviousOrders
+        context['current_order'] = current_order.id
+
+    if context['role'] == 'controller':
+        context['orders'] = ZipOrder.objects.filter(order_temp=False, order_closed=False).order_by("-date")
+
     return render(request, 'zip/index.html', context)
 
 
@@ -85,4 +90,25 @@ def to_order(request, order_id):
 
     else:
         return HttpResponse("Чужие заказы трогать низзя!")
+    return HttpResponseRedirect('/zip')
+
+def hide_order(request, order_id):
+    try:
+        tmp = ZipOrder.objects.get(id=order_id)
+        print (tmp)
+    except Exception:
+        return HttpResponse("Getting order Exception recieved")
+
+    try:
+        role = ZipUsers.objects.get(user=request.user.id).role
+    except Exception:
+        return HttpResponse("HIDE_ORDER. Критическая ошибка контроля ролей. Обратитесь к администратору")
+
+    if tmp.order_hidden == False and role == 'controller':
+        tmp.order_hidden = True
+        tmp.date_hidden = datetime.datetime.now()
+        tmp.save()
+
+    else:
+        return HttpResponse("Критическая ошибка скрытия заказа")
     return HttpResponseRedirect('/zip')

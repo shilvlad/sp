@@ -62,9 +62,9 @@
 
 
 
-{% if role == 'teamlead' %}TEAM{% block content %}{% endblock %}{% endif %}
-{% if role == 'admin' %}ADMIN{% block content_admin %}{% endblock %}{% endif %}
-{% if role == 'controller' %}CONT{% block content_controller %}{% endblock %}{% endif %}
+{% if role == 'teamlead' %}{% block content %}{% endblock %}{% endif %}
+{% if role == 'admin' %}{% block content_admin %}{% endblock %}{% endif %}
+{% if role == 'controller' %}{% block content_controller %}{% endblock %}{% endif %}
 
 
 
