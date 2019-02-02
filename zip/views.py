@@ -6,18 +6,23 @@ from django.shortcuts import render
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render, redirect, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
-from zip.models import ZipNames, ZipRecord, ZipOrder
+from zip.models import ZipNames, ZipRecord, ZipOrder, ZipUsers
 from django.contrib.auth.decorators import login_required
 import datetime
+import perm
 
-# Create your views here.
+
+
+
 @login_required
 def start(request):
 
-
-
     context = {}
+
+
     try:
+        context['role'] = ZipUsers.objects.get(user=request.user.id).role
+
         current_order = ZipOrder.objects.filter(order_temp=True).get(author=request.user)
     except Exception:
         tmp = ZipOrder()
@@ -47,6 +52,9 @@ def start(request):
     context['prev_orders'] = PreviousOrders
     context['current_order'] = current_order.id
     return render(request, 'zip/index.html', context)
+
+
+
 
 #TODO Проверить возможность удаления закрытых зипов через адресную строку
 @login_required
