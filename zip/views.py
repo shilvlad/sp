@@ -13,7 +13,7 @@ import datetime
 # Create your views here.
 @login_required
 def start(request):
-    
+
 
 
     context = {}
