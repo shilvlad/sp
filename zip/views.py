@@ -11,7 +11,10 @@ from django.contrib.auth.decorators import login_required
 import datetime
 import perm
 
-
+#TODO Реализовать логгирование
+#TODO распечатывание, выгрузка в Excel данных о заказах
+#TODO реализация функционала заказа специфических предметов
+#TODO реализация страницы помощи с возможностью отправки идеи
 
 
 @login_required
