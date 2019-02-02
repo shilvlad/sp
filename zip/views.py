@@ -38,8 +38,16 @@ def start(request):
         if request.method == 'POST':
             form = ZipRecordForm(request.POST)
             if form.is_valid():
-                form.save()
+                new_order = form.save()
+                t = ZipRecord.objects.filter(zip= new_order.zip,order=new_order.order, comment=new_order.comment)
+                #print t
+                if t.count() > 1:
+                    a = t[0].amount.__int__() + t[1].amount.__int__()
+                    n = ZipRecord.objects.get(id=t[0].id)
+                    n.amount = a
+                    n.save()
 
+                    t[1].delete()
                 return HttpResponseRedirect('/zip')
             else:
                 print("непонятная ситуация")
@@ -81,7 +89,7 @@ def record_delete(request, zip_record_id):
 def to_order(request, order_id):
     try:
         tmp = ZipOrder.objects.get(id=order_id)
-        print (tmp)
+        #print (tmp)
     except Exception:
         return HttpResponse("Мимо")
 
@@ -98,7 +106,7 @@ def to_order(request, order_id):
 def close_order(request, order_id):
     try:
         tmp = ZipOrder.objects.get(id=order_id)
-        print (tmp)
+        #print (tmp)
     except Exception:
         return HttpResponse("Getting order Exception recieved")
 
@@ -121,7 +129,7 @@ def close_order(request, order_id):
 def hide_order(request, order_id):
     try:
         tmp = ZipOrder.objects.get(id=order_id)
-        print (tmp)
+        #print (tmp)
     except Exception:
         return HttpResponse("Getting order Exception recieved")
 

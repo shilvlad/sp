@@ -59,7 +59,7 @@
                         </table>
                         {% if order.count %}
                             <button type="submit" class="btn btn-primary btn-sm"
-                                    onclick="return confirm('Заказ проверен, отправляем?');">Отправить заказ
+                                    onclick="return confirm('Отправляем?');">Отправить заказ
                             </button>
                         {% endif %}
                     </form>
@@ -77,13 +77,13 @@
                             <h6>Заказ №{{ o.id }} от {{ o.date | date:"d.m.Y H:m" }}</h6>
                             <small id="fileHelp" class="form-text text-muted">
                                 Статус:
-                                    {% if o.order_closed  and not o.order_hidden%}
-                                        Заказан {{ o.date_closed | date:"d.m.Y H:m" }}
-                                    {% elif not o.order_closed  and not o.order_hidden %}
-                                        В работе
-                                    {% elif o.order_closed and o.order_hidden %}
-                                        Завершен
-                                    {% endif %}
+                                {% if o.order_closed  and not o.order_hidden %}
+                                    Заказан {{ o.date_closed | date:"d.m.Y H:m" }}
+                                {% elif not o.order_closed  and not o.order_hidden %}
+                                    В работе
+                                {% elif o.order_closed and o.order_hidden %}
+                                    Завершен
+                                {% endif %}
                             </small>
                         </tr>
 
@@ -98,6 +98,7 @@
                         {% endfor %}
                         </tbody>
                     </table>
+                    <br>
                 {% endfor %}
             </div>
         </div>
@@ -111,10 +112,17 @@
 
             </div>
             <div class="col-xs-12 col-sm-6 col-md-8 col-lg-10">
-                <h4><center>Заказы (Открытые)</center></h4>
+                <h4>
+                    <center>Заказы (Открытые)</center>
+                </h4>
                 {% for order in orders %}
                     <h5>Заказ №{{ order.id }} | {{ order.author }}
-                        <a href="close_order/{{ order.id }}/"> <button type="button" class="btn btn-info btn-sm">Заказан</button></a>
+                        <a href="close_order/{{ order.id }}/">
+                            <button type="button" class="btn btn-info btn-sm"
+                                    onclick="return confirm('Заказ выполнен?');">
+                                Заказан
+                            </button>
+                        </a>
                     </h5>
                     <table class="table  table-hover table-sm">
                         <thead>
@@ -143,10 +151,16 @@
                     </table>
                 {% endfor %}
 
-                <h4><center>Заказы (Закрытые)</center></h4>
+                <h4>
+                    <center>Заказы (Закрытые)</center>
+                </h4>
                 {% for order in orders_closed %}
                     <h5>Заказ №{{ order.id }} | {{ order.author }}
-                        <a href="hide_order/{{ order.id }}/"> <button type="button" class="btn btn-info btn-sm">Скрыть</button></a>
+                        <a href="hide_order/{{ order.id }}/">
+                            <button type="button" class="btn btn-info btn-sm" onclick="return confirm('Закрываем?');">
+                                Скрыть
+                            </button>
+                        </a>
                     </h5>
                     <table class="table  table-hover table-sm">
                         <thead>
@@ -175,7 +189,9 @@
                     </table>
                 {% endfor %}
 
-                <h4><center>Заказы (Скрытые)</center></h4>
+                <h4>
+                    <center>Заказы (Скрытые)</center>
+                </h4>
                 {% for order in orders_hidden %}
                     <h5>Заказ №{{ order.id }} | {{ order.author }}
                     </h5>
