@@ -118,7 +118,7 @@
                                 <td>{{ o.amount }}</td>
                                 <td>{{ o.comment }}</td>
                                 <td>
-                                    <a href="freerecord_delete/{{ o.id }}"><img src="{% static "\icons\delete.png" %} "</a>
+                                    <a href="stationeryrecord_delete/{{ o.id }}"><img src="{% static "\icons\delete.png" %} "</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -128,7 +128,7 @@
 
                     <form action="to_order/{{ current_order }}/" method="post" class="form">
                         {% csrf_token %}
-                        {% if order.count %}
+                        {% if order.count or stationeryorder or freeorder %}
                             <button type="submit" class="btn btn-primary btn-sm"
                                     onclick="return confirm('Отправляем?');">Отправить заказ
                             </button>
@@ -173,6 +173,13 @@
                                 <td>{{ i.amount }}</td>
                             </tr>
                         {% endfor %}
+                        {% for i in o.get_stationeryrecords.all %}
+                            <tr>
+                                <td>{{ i.zip }}</td>
+                                <td>{{ i.amount }}</td>
+                            </tr>
+                        {% endfor %}
+
 
                         </tbody>
                     </table>

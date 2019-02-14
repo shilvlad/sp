@@ -35,6 +35,12 @@ class ZipOrder(models.Model):
         except Exception:
             tmp = None
         return tmp
+    def get_stationeryrecords(self):
+        try:
+            tmp = StationeryRecord.objects.filter(order=self)
+        except Exception:
+            tmp = None
+        return tmp
     def __unicode__(self):
         #return "Заказ № " + unicode(self.id) + " - Закрыт: " + unicode(self.order_closed) + ", заказчик: " + unicode(self.author)
         return unicode(str(self.id))
