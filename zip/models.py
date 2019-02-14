@@ -9,6 +9,11 @@ class ZipNames(models.Model):
     def __unicode__(self):
         return self.name
 
+class StationaryNames(models.Model):
+    name = models.CharField(max_length=300, editable=True)
+    def __unicode__(self):
+        return self.name
+
 class ZipOrder(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     order_temp = models.BooleanField(default=True)
@@ -24,6 +29,12 @@ class ZipOrder(models.Model):
         except Exception:
             tmp = None
         return tmp
+    def get_freeziprecords(self):
+        try:
+            tmp = FreeZipRecord.objects.filter(order=self)
+        except Exception:
+            tmp = None
+        return tmp
     def __unicode__(self):
         #return "Заказ № " + unicode(self.id) + " - Закрыт: " + unicode(self.order_closed) + ", заказчик: " + unicode(self.author)
         return unicode(str(self.id))
@@ -33,6 +44,23 @@ class ZipRecord(models.Model):
     amount = models.IntegerField(default=0)
     order = models.ForeignKey(ZipOrder, on_delete=models.CASCADE, default=0)
     comment = models.CharField(max_length=500, editable = True, blank=True)
+    def __unicode__(self):
+        return unicode(self.id) + ". " + unicode(self.zip) + " - " + unicode(self.amount)
+
+class FreeZipRecord(models.Model):
+    zip = models.CharField(max_length=500, editable = True, blank=True)
+    amount = models.IntegerField(default=0)
+    order = models.ForeignKey(ZipOrder, on_delete=models.CASCADE, default=0)
+    comment = models.CharField(max_length=500, editable = True, blank=True)
+    def __unicode__(self):
+        return unicode(self.id) + ". " + unicode(self.zip) + " - " + unicode(self.amount)
+
+class StationeryRecord(models.Model):
+    zip = models.ForeignKey(StationaryNames, on_delete=models.CASCADE)
+    amount = models.IntegerField(default=0)
+    order = models.ForeignKey(ZipOrder, on_delete=models.CASCADE, default=0)
+    comment = models.CharField(max_length=500, editable=True, blank=True)
+
     def __unicode__(self):
         return unicode(self.id) + ". " + unicode(self.zip) + " - " + unicode(self.amount)
 
