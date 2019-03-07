@@ -3,9 +3,25 @@ function window_open(href, width, height){
 }
 
 function show(state, href){
+    document.getElementById('window').style.display = state;
+    document.getElementById('wrap').style.display = state;
+    $('.content').load(href);
+    //$('.content').append('<p>***</p>');
+}
 
-					document.getElementById('window').style.display = state;
-					document.getElementById('wrap').style.display = state;
-					$('.content').load(href);
-                    //$('.content').append('<p>***</p>');
-			}
+
+
+window.addEventListener("load", function(){
+    document.getElementsById("mTab").addEventListener("click", function(e){
+        var elem = e.target || e.srcElement, field = document.createElement("input");
+        field.value = elem.innerHTML;
+        elem.innerHTML = "";
+        elem.appendChild(field);
+        field.focus();
+        field.addEventListener("blur",function(){
+            elem.innerHTML = this.value;
+            this.parentNode.removeChild(this);
+        });
+    });
+});
+

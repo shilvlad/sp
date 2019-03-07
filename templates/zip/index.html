@@ -12,6 +12,7 @@
     Заказ расходки
 {% endblock %}
 
+<script src="{% static "portal.js" %}"></script>
 
 {% block content %}
     <div class="container-fluid">
@@ -79,14 +80,14 @@
                     <h5>Текущий заказ № {{ current_order }}</h5>
 
 
-                    <table class="table  table-hover table-sm">
+                    <table class="table  table-hover table-sm" >
                         <thead>
                         <tr>
-                            <th scope="col">№</th>
-                            <th scope="col">Наименование</th>
-                            <th scope="col">Количество</th>
-                            <th scope="col">Комментарий</th>
-                            <th scope="col" class="-colLG"></th>
+                            <th scope="col" width="3%">№</th>
+                            <th scope="col" width="53%">Наименование</th>
+                            <th scope="col" width="32%">Комментарий</th>
+                            <th scope="col" width="10%">Количество</th>
+                            <th scope="col" class="-colLG" width="2%"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -94,12 +95,14 @@
                         {% for o in order %}
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
-                                <td>{{ o.zip }}</td>
-                                <td>{{ o.amount }}</td>
-                                <td>{{ o.comment }}</td>
+                                <td >{{ o.zip }}</td>
+
+                                <td >{{ o.comment }}</td>
+                                <td class="mTab" >{{ o.amount }}</td>
                                 <td>
                                     <a href="record_delete/{{ o.id }}"><img src="{% static "\icons\delete.png" %} "</a>
                                 </td>
+
                             </tr>
 
                         {% endfor %}
@@ -380,4 +383,19 @@
 
 {% block content_admin %}
     <a href="/admin">АДМИНКА ПОРТАЛА</a>
+
+
+    <body>
+    <div id="result">
+    </div>
+    <table id="mTab">
+        <tr>
+            <td>1</td><td>2</td>
+        </tr>
+        <tr>
+            <td>1</td><td>2</td>
+        </tr>
+
+    </table>
+    </body>
 {% endblock %}

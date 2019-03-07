@@ -86,3 +86,4 @@ class ZipIdea(models.Model):
     topic = models.CharField(max_length=300, editable=True)
     body = models.TextField(max_length=30000, editable=True)
     timestamp_create = models.DateTimeField(blank=True, editable=False, null=True)
+
