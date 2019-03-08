@@ -9,6 +9,9 @@ from django.contrib.auth.models import User
 from zip.models import ZipNames, ZipRecord, ZipOrder, ZipUsers, FreeZipRecord, StationeryRecord
 from django.contrib.auth.decorators import login_required
 import datetime
+import mimetypes, os
+import xlsxwriter
+
 import perm
 
 #TODO Реализовать логгирование
@@ -275,3 +278,43 @@ def hide_order(request, order_id):
         return HttpResponse("Критическая ошибка скрытия заказа")
     return HttpResponseRedirect('/zip')
 
+@login_required
+def export_excel(request):
+    context = {}
+    try:
+        context['role'] = ZipUsers.objects.get(user=request.user.id).role
+    except Exception:
+        return HttpResponse("START. Критическая ошибка контроля ролей. Обратитесь к администратору")
+
+    if context['role'] == 'controller':
+        context['orders'] = ZipOrder.objects.filter(order_temp=False, order_closed=False, order_hidden=False)
+
+
+
+    else:
+        return HttpResponse("EXPORT_EXCEL. Не контролёр. Это неправильно. Обратитесь к администратору")
+
+
+    excel_file_name = "temp.xls"
+
+    #fp = open(excel_file_name, "w");
+    #fp.write("Мне нравится Python!\nЭто классный язык!")
+    #fp.close();
+    #fp = open(excel_file_name, "rb");
+    #response = HttpResponse(fp.read());
+    #fp.close();
+
+
+
+
+    # Download
+    file_type = mimetypes.guess_type(excel_file_name);
+    if file_type is None:
+        file_type = 'application/octet-stream';
+    response['Content-Type'] = file_type
+    response['Content-Length'] = str(os.stat(excel_file_name).st_size);
+    response['Content-Disposition'] = "attachment; filename=report.xlsx";
+    os.remove(excel_file_name)
+
+    print context['orders']
+    return response
