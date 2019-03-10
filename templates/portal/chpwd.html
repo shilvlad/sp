@@ -1,0 +1,39 @@
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
+        <div class="card text-white bg-dark mb-3" style="max-width: 50rem;">
+            <div class="card-header">Смена пароля</div>
+            <div class="card-body">
+
+                <form action="idea/" method="post" class="form">
+                    {% csrf_token %}
+                    <br>
+                    {% bootstrap_form form layout='horizontal' size='small' %}
+
+                    <button type="submit" class="btn btn-primary btn-sm">Сменить</button>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

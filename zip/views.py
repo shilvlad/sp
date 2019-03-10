@@ -18,10 +18,6 @@ from zip.models import ZipRecord, ZipOrder, ZipUsers, FreeZipRecord, StationeryR
 
 #TODO Реализовать логгирование
 
-#TODO реализация функционала заказа специфических предметов
-#TODO реализация страницы помощи с возможностью отправки идеи
-
-
 @login_required
 def start(request):
 
@@ -180,7 +176,6 @@ def add_stationery(request):
     else:
         print("ERROR: Not teamlead")
         return HttpResponseRedirect('/zip')
-
 
 @login_required
 def record_delete(request, zip_record_id):
