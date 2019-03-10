@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from zip.models import ZipRecord, FreeZipRecord, StationeryRecord
+from zip.models import ZipRecord, FreeZipRecord, StationeryRecord, ZipIdea
 from django.forms import ModelForm
 
 class ZipRecordForm(ModelForm):
@@ -37,3 +37,14 @@ class StationeryRecordForm(ModelForm):
             "order": "Заказ",
             "comment": "Комментарий",
         }
+
+class ZipIdeaForm(ModelForm):
+    class Meta:
+        model = ZipIdea
+        fields = '__all__'
+        labels = {
+            "author":"От:",
+            "topic":"Тема:",
+            "body":"Идея:",
+        }
+

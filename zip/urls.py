@@ -19,6 +19,8 @@ urlpatterns = [
     url(r'^add_freezip/', views.add_freezip, name='add_freezip'),
     url(r'^add_stationeryzip/', views.add_stationery, name='add_stationery'),
 
+    url(r'^idea/', views.idea, name='idea'),
+
 #    url(r'^contacts/', views.contacts, name='contacts'),
 #    url(r'^userrequest/', views.userrequest, name='userrequest'),
 #    url(r'^login/', views.user_login, name='login'),

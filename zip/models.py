@@ -81,4 +81,8 @@ class ZipUsers(models.Model):
     def __unicode__(self):
         return str(self.user) + " - " + str(self.role)
 
-
+class ZipIdea(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
+    topic = models.CharField(max_length=300, editable=True)
+    body = models.TextField(max_length=30000, editable=True)
+    timestamp_create = models.DateTimeField(blank=True, editable=False, null=True)

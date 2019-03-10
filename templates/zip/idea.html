@@ -1,0 +1,37 @@
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Поделись идеей &ndash; Tk Portal</title>
+    {% load static %}
+    <script src="{% static "portal.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "portal.css" %} " />
+</head>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <form action="idea/" method="post" class="form">
+                {% csrf_token %}
+                <br>
+                {% bootstrap_form form layout='horizontal' size='small' %}
+
+                <button type="submit" class="btn btn-primary btn-sm">Добавить</button>
+            </form>
+        </div>
+    </div>
+</div>

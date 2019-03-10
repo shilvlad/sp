@@ -2,24 +2,22 @@
 
 # codepage=UTF8
 
-from django.shortcuts import render
-from zip.forms import ZipRecordForm, FreeZipRecordForm, StationeryRecordForm
-from django.shortcuts import render
-from django.contrib.auth import login, logout, authenticate
-from django.shortcuts import render, redirect, HttpResponseRedirect, HttpResponse
-from django.contrib.auth.models import User
-from zip.models import ZipNames, ZipRecord, ZipOrder, ZipUsers, FreeZipRecord, StationeryRecord
-from django.contrib.auth.decorators import login_required
 import datetime
-import mimetypes, os
-import xlsxwriter
-from django.db.models import Count
-from django.conf import settings
+import mimetypes
+import os
 
-import perm
+import xlsxwriter
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse
+
+from zip.forms import ZipRecordForm, FreeZipRecordForm, StationeryRecordForm, ZipIdeaForm
+from zip.models import ZipRecord, ZipOrder, ZipUsers, FreeZipRecord, StationeryRecord, ZipIdea
+
 
 #TODO Реализовать логгирование
-#TODO распечатывание, выгрузка в Excel данных о заказах
+
 #TODO реализация функционала заказа специфических предметов
 #TODO реализация страницы помощи с возможностью отправки идеи
 
@@ -45,6 +43,10 @@ def start(request):
         ZO = ZipRecord.objects.filter(order=current_order.id)
         FZO = FreeZipRecord.objects.filter(order=current_order.id)
         SO = StationeryRecord.objects.filter(order=current_order.id)
+
+        ideas = ZipIdea.objects.all()
+        for idea in ideas:
+            print idea.author, idea.topic, idea.body, idea.timestamp_create
 
         PreviousOrders = ZipOrder.objects.filter(author=request.user).filter(order_temp=False).order_by("-date")[0:5]
 
@@ -306,7 +308,7 @@ def print_list(list):
 @login_required
 def export_excel(request):
     excel_file_name = settings.BASE_DIR + "/tmp/temp.xls"
-    print excel_file_name
+    #print excel_file_name
     try:
         role = ZipUsers.objects.get(user=request.user.id).role
     except Exception:
@@ -409,6 +411,21 @@ def export_excel(request):
 
     return response
 
-    #return HttpResponse(excel_file_name);
+def idea(request):
+    context = {}
+    if request.method == 'POST':
+        form = ZipIdeaForm(request.POST)
+        data = form.save(commit=False)
+        data.author = User.objects.get(username=request.user)
+        data.timestamp_create = datetime.datetime.now()
+        data.save()
+
+        return HttpResponse("<script>window.close();window.opener.location.reload();</script>")
+    else:
+        form = ZipIdeaForm()
+        context['form'] = form
+
+        return render(request, 'zip/idea.html', context)
+
 
 
