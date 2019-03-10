@@ -305,7 +305,8 @@ def print_list(list):
 
 @login_required
 def export_excel(request):
-    excel_file_name = settings.BASE_DIR."temp.xls"
+    excel_file_name = settings.BASE_DIR + "/tmp/temp.xls"
+    print excel_file_name
     try:
         role = ZipUsers.objects.get(user=request.user.id).role
     except Exception:
@@ -406,8 +407,8 @@ def export_excel(request):
     os.remove(excel_file_name)
 
 
-    #return response
+    return response
 
-    return HttpResponse(settings.BASE_DIR);
+    #return HttpResponse(excel_file_name);
 
 
