@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# codepage=UTF8
+
 from django.shortcuts import render
 from zip.forms import ZipRecordForm, FreeZipRecordForm, StationeryRecordForm
 from django.shortcuts import render
@@ -11,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 import datetime
 import mimetypes, os
 import xlsxwriter
+from django.db.models import Count
 
 import perm
 
@@ -278,34 +281,119 @@ def hide_order(request, order_id):
         return HttpResponse("Критическая ошибка скрытия заказа")
     return HttpResponseRedirect('/zip')
 
+def clean_list(list):
+    zips_clean = []
+    for a, b, c, d in (list):
+        in_clean_list = False
+        for ac, bc, cc, dc in (zips_clean):
+            if ac == a and cc == c:
+                in_clean_list = True
+                zips_clean.remove([ac, bc, cc, dc])
+                zips_clean.append([ac, b + bc, cc, dc])
+                break
+
+        if in_clean_list == False:
+            zips_clean.append([a, b, c, d])
+    return zips_clean
+
+def print_list(list):
+    for a,b,c,d in (list):
+        print a,b,c,d
+
 @login_required
 def export_excel(request):
-    context = {}
+    excel_file_name = "temp.xls"
     try:
-        context['role'] = ZipUsers.objects.get(user=request.user.id).role
+        role = ZipUsers.objects.get(user=request.user.id).role
     except Exception:
         return HttpResponse("START. Критическая ошибка контроля ролей. Обратитесь к администратору")
 
-    if context['role'] == 'controller':
-        context['orders'] = ZipOrder.objects.filter(order_temp=False, order_closed=False, order_hidden=False)
-
-
+    if role == 'controller':
+        orders = ZipOrder.objects.filter(order_temp=False, order_closed=False, order_hidden=False)
 
     else:
         return HttpResponse("EXPORT_EXCEL. Не контролёр. Это неправильно. Обратитесь к администратору")
 
+    zips = []
+    for o in orders:
+        zr = o.get_ziprecords()
+        for zip in zr:
+            zips.append([zip.zip.name, zip.amount, zip.comment, o.author])
 
-    excel_file_name = "temp.xls"
+        fzr = o.get_freeziprecords()
+        for zip in fzr:
+            zips.append([zip.zip, zip.amount, zip.comment, o.author])
 
-    #fp = open(excel_file_name, "w");
-    #fp.write("Мне нравится Python!\nЭто классный язык!")
-    #fp.close();
-    #fp = open(excel_file_name, "rb");
-    #response = HttpResponse(fp.read());
-    #fp.close();
+        sr = o.get_stationeryrecords()
+        for zip in sr:
+            zips.append([zip.zip.name, zip.amount, zip.comment, o.author])
+
+    # Group list
+    groups = []
+    for a,b,c,d in (zips):
+        #print a,b,c,d
+        if d not in groups:
+            groups.append(d)
 
 
 
+    zips_clean = clean_list(zips)
+    print_list(zips_clean)
+
+
+    # Списки по группам
+    zips_by_group = {}
+    for group in groups:
+        zz = []
+        for a, b, c ,d in (zips):
+            if d == group:
+                zz.append([a,b,c,d])
+                print d
+        zips_by_group[str(group)] = clean_list(zz)
+
+    print zips_by_group
+
+
+
+    # ==================== EXPORT TO EXCEL ======================
+
+    # Общий список
+    row = 0
+    col = 0
+
+    workbook = xlsxwriter.Workbook(excel_file_name)
+    ws = workbook.add_worksheet("All")
+
+    ws.write(row, col, 'ZIP_NAME')
+    ws.write(row, col + 1, 'AMOUNT')
+    ws.write(row, col + 2, 'COMMENT')
+    row += 1
+
+    for item, amount, comment, group in (zips_clean):
+        ws.write(row, col, item)
+        ws.write(row, col + 1, amount)
+        ws.write(row, col + 2, comment)
+        row += 1
+
+    for g in groups:
+        ws = workbook.add_worksheet(str(g))
+        row = 0
+        col = 0
+        ws.write(row, col, 'ZIP_NAME')
+        ws.write(row, col + 1, 'AMOUNT')
+        ws.write(row, col + 2, 'COMMENT')
+        row += 1
+
+        for item, amount, comment, group in (zips_by_group[str(g)]):
+            ws.write(row, col, item)
+            ws.write(row, col + 1, amount)
+            ws.write(row, col + 2, comment)
+            row += 1
+
+    workbook.close()
+    fp = open(excel_file_name, "rb");
+    response = HttpResponse(fp.read());
+    fp.close();
 
     # Download
     file_type = mimetypes.guess_type(excel_file_name);
@@ -316,5 +404,7 @@ def export_excel(request):
     response['Content-Disposition'] = "attachment; filename=report.xlsx";
     os.remove(excel_file_name)
 
-    print context['orders']
+
     return response
+
+

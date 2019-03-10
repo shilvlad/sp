@@ -242,6 +242,16 @@
                                 </td>
                             </tr>
                         {% endfor %}
+                        {% for o in order.get_stationeryrecords %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count|add:order.get_freeziprecords.count}}</th>
+                                <td>{{ o.zip }}</td>
+                                <td>{{ o.amount }}</td>
+                                <td>{{ o.comment }}</td>
+                                <td></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 {% endfor %}
@@ -282,7 +292,17 @@
                         {% endfor %}
                         {% for o in order.get_freeziprecords %}
                             <tr>
-                                <th scope="row">{{ forloop.counter }}</th>
+                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count}}</th>
+                                <td>{{ o.zip }}</td>
+                                <td>{{ o.amount }}</td>
+                                <td>{{ o.comment }}</td>
+                                <td></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% for o in order.get_stationeryrecords %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count|add:order.get_freeziprecords.count}}</th>
                                 <td>{{ o.zip }}</td>
                                 <td>{{ o.amount }}</td>
                                 <td>{{ o.comment }}</td>
@@ -325,7 +345,17 @@
                         {% endfor %}
                         {% for o in order.get_freeziprecords %}
                             <tr>
-                                <th scope="row">{{ forloop.counter }}</th>
+                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count}}</th>
+                                <td>{{ o.zip }}</td>
+                                <td>{{ o.amount }}</td>
+                                <td>{{ o.comment }}</td>
+                                <td></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% for o in order.get_stationeryrecords %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count|add:order.get_freeziprecords.count}}</th>
                                 <td>{{ o.zip }}</td>
                                 <td>{{ o.amount }}</td>
                                 <td>{{ o.comment }}</td>
