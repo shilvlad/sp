@@ -14,6 +14,7 @@ import datetime
 import mimetypes, os
 import xlsxwriter
 from django.db.models import Count
+from django.conf import settings
 
 import perm
 
@@ -304,7 +305,7 @@ def print_list(list):
 
 @login_required
 def export_excel(request):
-    excel_file_name = "temp.xls"
+    excel_file_name = settings.BASE_DIR."temp.xls"
     try:
         role = ZipUsers.objects.get(user=request.user.id).role
     except Exception:
@@ -337,11 +338,7 @@ def export_excel(request):
         if d not in groups:
             groups.append(d)
 
-
-
     zips_clean = clean_list(zips)
-    # print_list(zips_clean)
-
 
     # Списки по группам
     zips_by_group = {}
@@ -352,12 +349,6 @@ def export_excel(request):
                 zz.append([a,b,c,d])
                 #print d
         zips_by_group[str(group)] = clean_list(zz)
-
-    # print zips_by_group
-
-
-
-    # ==================== EXPORT TO EXCEL ======================
 
     # Общий список
     row = 0
@@ -415,6 +406,8 @@ def export_excel(request):
     os.remove(excel_file_name)
 
 
-    return response
+    #return response
+
+    return HttpResponse(settings.BASE_DIR);
 
 
