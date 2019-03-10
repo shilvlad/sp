@@ -281,6 +281,7 @@ def hide_order(request, order_id):
         return HttpResponse("Критическая ошибка скрытия заказа")
     return HttpResponseRedirect('/zip')
 
+# Сворачиваем список
 def clean_list(list):
     zips_clean = []
     for a, b, c, d in (list):
@@ -296,6 +297,7 @@ def clean_list(list):
             zips_clean.append([a, b, c, d])
     return zips_clean
 
+# Печать списка
 def print_list(list):
     for a,b,c,d in (list):
         print a,b,c,d
@@ -338,7 +340,7 @@ def export_excel(request):
 
 
     zips_clean = clean_list(zips)
-    print_list(zips_clean)
+    # print_list(zips_clean)
 
 
     # Списки по группам
@@ -348,10 +350,10 @@ def export_excel(request):
         for a, b, c ,d in (zips):
             if d == group:
                 zz.append([a,b,c,d])
-                print d
+                #print d
         zips_by_group[str(group)] = clean_list(zz)
 
-    print zips_by_group
+    # print zips_by_group
 
 
 
@@ -389,6 +391,14 @@ def export_excel(request):
             ws.write(row, col + 1, amount)
             ws.write(row, col + 2, comment)
             row += 1
+
+    ws = workbook.add_worksheet("Orders")
+    row = 0
+    ws.write(row, 0, 'Order')
+    for oo in orders:
+        row += 1
+        ws.write(row, 0, oo.id)
+
 
     workbook.close()
     fp = open(excel_file_name, "rb");
