@@ -304,7 +304,7 @@ def print_list(list):
 
 @login_required
 def export_excel(request):
-    excel_file_name = "temp.xls"
+    excel_file_name = "tmp/temp.xls"
     try:
         role = ZipUsers.objects.get(user=request.user.id).role
     except Exception:
