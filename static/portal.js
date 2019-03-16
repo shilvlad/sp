@@ -17,6 +17,7 @@ window.addEventListener("load", function(){
         if (elem.cellIndex == "3" && elem.tagName == "TD") {
 
             field.type = "number"
+            field.style.width = "100"
             field.value = elem.innerHTML;
             temp = elem.innerHTML;
             elem.innerHTML = "";
