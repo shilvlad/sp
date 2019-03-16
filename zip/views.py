@@ -11,6 +11,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse
+from django.core import serializers
 
 from zip.forms import ZipRecordForm, FreeZipRecordForm, StationeryRecordForm, ZipIdeaForm
 from zip.models import ZipRecord, ZipOrder, ZipUsers, FreeZipRecord, StationeryRecord, ZipIdea
@@ -189,16 +190,14 @@ def update_record(request):
         source['freezip'] = FreeZipRecord
         source['stationery'] = StationeryRecord
 
-
+        #print request.GET['type']
         tmp = source[request.GET['type']].objects.get(id = request.GET['id'])
-        #print tmp.amount
         tmp.amount = request.GET['amount']
-
         tmp.save()
-        #tmp = source[request.GET['type']].objects.get(id=request.GET['id'])
-        #print tmp.amount
 
-        return HttpResponse(tmp.amount)
+        data = serializers.serialize('xml', source[request.GET['type']].objects.filter(id = request.GET['id']), fields=('amount'))
+        #print data
+        return HttpResponse(data)
         #return HttpResponseRedirect('/zip')
 
 @login_required

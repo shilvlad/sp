@@ -100,7 +100,7 @@
                                 <td >{{ o.comment }}</td>
                                 <td class="zip" id="{{ o.id }}">{{ o.amount }}</td>
                                 <td>
-                                    <a href="record_delete/{{ o.id }}"><img src="{% static "\icons\delete.png" %} "</a>
+                                    <a href="record_delete/{{ o.id }}"><img src="{% static '\icons\delete.png' %} "</a>
                                 </td>
 
                             </tr>
@@ -113,9 +113,8 @@
                                 <td>{{ o.zip }}</td>
                                 <td>{{ o.comment }}</td>
                                 <td class="freezip" id="{{ o.id }}">{{ o.amount }}</td>
-
                                 <td>
-                                    <a href="freerecord_delete/{{ o.id }}"><img src="{% static "\icons\delete.png" %} "</a>
+                                    <a href="freerecord_delete/{{ o.id }}"><img src="{% static '\icons\delete.png' %} "</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -126,16 +125,13 @@
                                 <td>{{ o.zip }}</td>
                                 <td>{{ o.comment }}</td>
                                 <td class="stationery" id="{{ o.id }}">{{ o.amount }}</td>
-
                                 <td>
-                                    <a href="stationeryrecord_delete/{{ o.id }}"><img src="{% static "\icons\delete.png" %} "</a>
+                                    <a href="stationeryrecord_delete/{{ o.id }}"><img src="{% static '\icons\delete.png' %} "</a>
                                 </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
-
-
                     <form action="to_order/{{ current_order }}/" method="post" class="form">
                         {% csrf_token %}
                         {% if order.count or stationeryorder or freeorder %}
@@ -144,10 +140,7 @@
                             </button>
                         {% endif %}
                     </form>
-
                 </div>
-
-
             </div>
             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                 <h4>Предыдущие заказы</h4>

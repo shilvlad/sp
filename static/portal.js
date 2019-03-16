@@ -37,16 +37,10 @@ window.addEventListener("load", function(){
             field.addEventListener("keydown",function(event){
                 flag = true;
                 if(event.which == 13){
-                    //alert(elem.attributes.id.value);
-                    //alert(this.value);
                     elem.innerHTML = this.value;
-                    //console.log('Enter pressed');
-                    //console.log(event);
-                    //this.parentNode.removeChild(this);
                     a_url = "update_record/"
                     a_data = "id="+ elem.attributes.id.value + "&type=" + elem.attributes.class.value + "&amount="+this.value;
 
-                    //console.log(a_data);
                     var time = performance.now();
 
 
@@ -55,11 +49,9 @@ window.addEventListener("load", function(){
                         url: a_url,
                         data: a_data,
                         success: function(data){
-                            alert( "Прибыли данные: " + data );
-                            elem.innerHTML = data;
+                            var xmlDoc = $.parseXML( data );
+                            elem.innerHTML = $(xmlDoc).find( "field" ).text();
 
-                            //$('.ajax').html($('.ajax input').val());
-                            //$('.ajax').removeClass('ajax');
                         },
                         error: function(data){
                             alert("ERROR. Response: "+data.value);
@@ -80,21 +72,3 @@ window.addEventListener("load", function(){
 
 
 
-//определяем нажатие кнопки на клавиатуре
-$('td.edit').keydown(function(event){
-    arr = $(this).attr('class').split( " " );
-    //проверяем какая была нажата клавиша и если была нажата клавиша Enter (код 13)
-    alert(event.which)
-    if(event.which == 13)
-    {
-
-        var table = $('table').attr('id');
-        //выполняем ajax запрос методом POST
-        $.ajax({ type: "POST",
-            url:"update_cell.php",
-            data: "value="+$('.ajax input').val()+"&id="+arr[2]+"&field="+arr[1]+"&table="+table,
-            success: function(data){
-                $('.ajax').html($('.ajax input').val());
-                $('.ajax').removeClass('ajax');
-            }});
-    }});
