@@ -178,6 +178,30 @@ def add_stationery(request):
         return HttpResponseRedirect('/zip')
 
 @login_required
+def update_record(request):
+    if request.method == 'POST':
+        #return HttpResponse(request.POST['id'])
+        return HttpResponseRedirect('/zip')
+
+    else:
+        source = {}
+        source['zip'] = ZipRecord
+        source['freezip'] = FreeZipRecord
+        source['stationery'] = StationeryRecord
+
+
+        tmp = source[request.GET['type']].objects.get(id = request.GET['id'])
+        #print tmp.amount
+        tmp.amount = request.GET['amount']
+
+        tmp.save()
+        #tmp = source[request.GET['type']].objects.get(id=request.GET['id'])
+        #print tmp.amount
+
+        return HttpResponse(tmp.amount)
+        #return HttpResponseRedirect('/zip')
+
+@login_required
 def record_delete(request, zip_record_id):
     try:
         tmp = ZipRecord.objects.get(id=zip_record_id)

@@ -10,18 +10,91 @@ function show(state, href){
 }
 
 
-
 window.addEventListener("load", function(){
-    document.getElementsById("mTab").addEventListener("click", function(e){
+    document.getElementById("mTab").addEventListener("click", function(e){
         var elem = e.target || e.srcElement, field = document.createElement("input");
-        field.value = elem.innerHTML;
-        elem.innerHTML = "";
-        elem.appendChild(field);
-        field.focus();
-        field.addEventListener("blur",function(){
-            elem.innerHTML = this.value;
-            this.parentNode.removeChild(this);
-        });
+        // alert(elem.cellIndex);
+        if (elem.cellIndex == "3") {
+            field.type = "number"
+            field.value = elem.innerHTML;
+            temp = elem.innerHTML;
+            elem.innerHTML = "";
+            elem.appendChild(field);
+            field.focus();
+            //console.log('listeners');
+
+            flag = false;
+
+            field.addEventListener("focusout",function(event){
+                if (flag == false) {
+                    //elem.innerHTML = this.value;
+                    elem.innerHTML = temp;
+                    //this.parentNode.removeChild(this);
+                    //console.log('Blur used');
+                    //console.log(event);
+                }
+            });
+            field.addEventListener("keydown",function(event){
+                flag = true;
+                if(event.which == 13){
+                    //alert(elem.attributes.id.value);
+                    //alert(this.value);
+                    elem.innerHTML = this.value;
+                    //console.log('Enter pressed');
+                    //console.log(event);
+                    //this.parentNode.removeChild(this);
+                    a_url = "update_record/"
+                    a_data = "id="+ elem.attributes.id.value + "&type=" + elem.attributes.class.value + "&amount="+this.value;
+
+                    //console.log(a_data);
+                    var time = performance.now();
+
+
+
+                    $.ajax({ type: "GET",
+                        url: a_url,
+                        data: a_data,
+                        success: function(data){
+                            alert( "Прибыли данные: " + data );
+                            elem.innerHTML = data;
+
+                            //$('.ajax').html($('.ajax input').val());
+                            //$('.ajax').removeClass('ajax');
+                        },
+                        error: function(data){
+                            alert("ERROR. Response: "+data.value);
+                        }
+
+                    });
+                    console.log(performance.now() - time);
+
+
+                }
+                flag = false;
+            });
+
+
+        }
     });
 });
 
+
+
+//определяем нажатие кнопки на клавиатуре
+$('td.edit').keydown(function(event){
+    arr = $(this).attr('class').split( " " );
+    //проверяем какая была нажата клавиша и если была нажата клавиша Enter (код 13)
+    alert(event.which)
+    if(event.which == 13)
+    {
+
+        var table = $('table').attr('id');
+        //выполняем ajax запрос методом POST
+        $.ajax({ type: "POST",
+            url:"update_cell.php",
+            data: "value="+$('.ajax input').val()+"&id="+arr[2]+"&field="+arr[1]+"&table="+table,
+            success: function(data){
+                $('.ajax').html($('.ajax input').val());
+                $('.ajax').removeClass('ajax');
+            }});
+    }});
