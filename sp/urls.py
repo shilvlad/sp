@@ -23,4 +23,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('portal.urls')),
     url(r'^zip/', include('zip.urls')),
+    url(r'^dev_test/', include('dev_test.urls')),
+
 ]

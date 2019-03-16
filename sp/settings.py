@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'portal.apps.PortalConfig',
     'bootstrap4',
-    'zip'
+    'zip',
+    'dev_test',
 ]
 
 MIDDLEWARE = [
