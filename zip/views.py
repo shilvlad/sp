@@ -80,7 +80,8 @@ def start(request):
 
 
     if context['role'] == 'admin':
-        send_mail(u'Вход в админку', u'Выполнен вход в администраторскую панель', 'a@iteko.su', ['a@iteko.su'], fail_silently=False, )
+        #send_mail(u'Вход в админку', u'Выполнен вход в администраторскую панель', 'ilya.schegolyaev@ramax.ru', [ 'ilya.schegolyaev@ramax.ru'], fail_silently=False, )
+        pass
 
     return render(request, 'zip/index.html', context)
 
@@ -256,6 +257,8 @@ def to_order(request, order_id):
         tmp.order_temp = False
         tmp.date = datetime.datetime.now()
         tmp.save()
+        send_mail(u'Сделан заказ', u'Создан заказ', 'ilya.schegolyaev@ramax.ru', [ 'ilya.schegolyaev@ramax.ru'], fail_silently=False, )
+
 
     else:
         return HttpResponse("Чужие заказы трогать низзя!")
