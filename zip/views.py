@@ -16,6 +16,7 @@ from django.core import serializers
 from zip.forms import ZipRecordForm, FreeZipRecordForm, StationeryRecordForm, ZipIdeaForm
 from zip.models import ZipRecord, ZipOrder, ZipUsers, FreeZipRecord, StationeryRecord, ZipIdea
 
+from django.core.mail import send_mail
 
 #TODO Реализовать логгирование
 
@@ -76,6 +77,10 @@ def start(request):
         context['orders'] = ZipOrder.objects.filter(order_temp=False, order_closed=False, order_hidden=False).order_by("-date")
         context['orders_closed'] = ZipOrder.objects.filter(order_temp=False, order_closed=True, order_hidden=False).order_by("-date")
         context['orders_hidden'] = ZipOrder.objects.filter(order_temp=False, order_closed=True, order_hidden=True).order_by("-date")
+
+
+    if context['role'] == 'admin':
+        send_mail(u'Вход в админку', u'Выполнен вход в администраторскую панель', 'a@iteko.su', ['a@iteko.su'], fail_silently=False, )
 
     return render(request, 'zip/index.html', context)
 
