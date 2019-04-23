@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^update_comment/', views.update_comment, name='update_comment'),
 
     url(r'^idea/', views.idea, name='idea'),
+    url(r'^idea_show/', views.idea_show, name='idea_show'),
 
 
 

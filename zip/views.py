@@ -484,6 +484,7 @@ def export_excel(request):
 
     return response
 
+@login_required
 def idea(request):
     context = {}
     if request.method == 'POST':
@@ -499,6 +500,17 @@ def idea(request):
         context['form'] = form
 
         return render(request, 'zip/idea.html', context)
+
+
+@login_required
+def idea_show(request):
+    context = {}
+    context['role'] = ZipUsers.objects.get(user=request.user.id).role
+    ideas = ZipIdea.objects.all()
+    context['ideas'] = ideas
+    print ideas
+    return render(request, 'zip/idea_show.html', context)
+
 
 
 
