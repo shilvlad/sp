@@ -13,7 +13,7 @@ function show(state, href){
 window.addEventListener("load", function(){
     document.getElementById("mTab").addEventListener("click", function(e){
         var elem = e.target || e.srcElement, field = document.createElement("input");
-        // alert(elem.cellIndex);
+        //alert(elem.cellIndex);
         if (elem.cellIndex == "3" && elem.tagName == "TD") {
 
             field.type = "number"
@@ -69,6 +69,9 @@ window.addEventListener("load", function(){
 
 
         }
+
+
+
     });
 });
 

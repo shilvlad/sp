@@ -208,14 +208,18 @@
 
                 <div id="mTab">
                 {% for order in orders %}
-                    <h5>Заказ №{{ order.id }} | {{ order.author }}
+                    <h5>Заказ №{{ order.id }} | {{ order.author }} (Создан {{ order.date }})
                         <a href="close_order/{{ order.id }}/">
                             <button type="button" class="btn btn-info btn-sm"
                                     onclick="return confirm('Заказ выполнен?');">
-                                Заказан
+                                Закрыть
                             </button>
                         </a>
+
                     </h5>
+                    <span class="badge badge-pill badge-secondary">Заказчик: {{ order.author }}</span>
+                    <br>
+                    <span class="badge badge-pill badge-secondary">Создан: {{ order.date}}</span>
 
                     <table class="table  table-hover table-sm" >
                         <thead>
@@ -269,13 +273,23 @@
                     <center>Заказы (Закрытые)</center>
                 </h4>
                 {% for order in orders_closed %}
-                    <h5>Заказ №{{ order.id }} | {{ order.author }}
+                    <h5>Заказ №{{ order.id }}
                         <a href="hide_order/{{ order.id }}/">
                             <button type="button" class="btn btn-info btn-sm" onclick="return confirm('Закрываем?');">
                                 Скрыть
                             </button>
                         </a>
+                        <a href="reopen_order/{{ order.id }}/">
+                            <button type="button" class="btn btn-info btn-sm"
+                                    onclick="return confirm('Переоткрыть заказ?');">
+                                Вернуть
+                            </button>
+                        </a>
                     </h5>
+                    <span class="badge badge-pill badge-secondary">Заказчик: {{ order.author }}</span>
+                    <br>
+                    <span class="badge badge-pill badge-secondary">Закрыт: {{ order.date_closed}}</span>
+
                     <table class="table  table-hover table-sm">
                         <thead>
                         <tr>

@@ -23,7 +23,6 @@ from django.core.mail import send_mail
 
 @login_required
 def start(request):
-
     context = {}
     try:
         context['role'] = ZipUsers.objects.get(user=request.user.id).role
@@ -208,6 +207,28 @@ def update_record(request):
         #return HttpResponseRedirect('/zip')
 
 @login_required
+def update_comment(request):
+    if request.method == 'POST':
+        #return HttpResponse(request.POST['id'])
+        return HttpResponseRedirect('/zip')
+
+    else:
+        source = {}
+        source['zip'] = ZipRecord
+        source['freezip'] = FreeZipRecord
+        source['stationery'] = StationeryRecord
+
+        #print request.GET['type']
+        tmp = source[request.GET['type']].objects.get(id = request.GET['id'])
+        tmp.amount = request.GET['amount']
+        tmp.save()
+
+        data = serializers.serialize('xml', source[request.GET['type']].objects.filter(id = request.GET['id']), fields=('amount'))
+        #print data
+        return HttpResponse(data)
+        #return HttpResponseRedirect('/zip')
+
+@login_required
 def record_delete(request, zip_record_id):
     try:
         tmp = ZipRecord.objects.get(id=zip_record_id)
@@ -282,12 +303,35 @@ def close_order(request, order_id):
     if tmp.order_closed == False and role == 'controller':
         tmp.order_closed = True
         tmp.order_hidden = False
-        tmp.date_hidden = datetime.datetime.now()
+        tmp.date_closed = datetime.datetime.now()
         tmp.save()
 
     else:
         return HttpResponse("Критическая ошибка скрытия заказа")
     return HttpResponseRedirect('/zip')
+
+@login_required
+def reopen_order(request, order_id):
+    try:
+        tmp = ZipOrder.objects.get(id=order_id)
+    except Exception:
+        return HttpResponse("Getting order Exception recieved")
+
+    try:
+        role = ZipUsers.objects.get(user=request.user.id).role
+    except Exception:
+        return HttpResponse("HIDE_ORDER. Критическая ошибка контроля ролей. Обратитесь к администратору")
+
+    if tmp.order_closed == True and role == 'controller':
+        tmp.order_closed = False
+        tmp.order_hidden = False
+        tmp.date_hidden = datetime.datetime.now()
+        tmp.save()
+
+    else:
+        return HttpResponse("Критическая ошибка открытия заказа")
+    return HttpResponseRedirect('/zip')
+
 
 @login_required
 def hide_order(request, order_id):

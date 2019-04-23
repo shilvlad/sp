@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = ')00ql5e%qi5la0@c_e-^*w^_%s2qh2zc&$+ob15^23-v_2ul&&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -122,14 +122,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+
 ORDER_MAIL_LIST = ['a@iteko.su']
 ORDER_FROM_LIST = 'a@iteko.su'
-
 
 
 DEFAULT_FROM_EMAIL = 'a@iteko.su'

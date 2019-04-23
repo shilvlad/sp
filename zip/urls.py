@@ -15,6 +15,8 @@ urlpatterns = [
 
     url(r'^hide_order/(?P<order_id>[0-9]+)/$', views.hide_order, name='hide_order'),
     url(r'^close_order/(?P<order_id>[0-9]+)/$', views.close_order, name='close_order'),
+    url(r'^reopen_order/(?P<order_id>[0-9]+)/$', views.reopen_order, name='reopen_order'),
+
     url(r'^add_zip/', views.add_zip, name='add_zip'),
     url(r'^add_freezip/', views.add_freezip, name='add_freezip'),
     url(r'^add_stationeryzip/', views.add_stationery, name='add_stationery'),
@@ -22,6 +24,8 @@ urlpatterns = [
     url(r'^update_record/', views.update_record, name='update_record'),
 
     url(r'^idea/', views.idea, name='idea'),
+
+
 
 #    url(r'^contacts/', views.contacts, name='contacts'),
 #    url(r'^userrequest/', views.userrequest, name='userrequest'),
