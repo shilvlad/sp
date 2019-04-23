@@ -238,7 +238,7 @@
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
                                 <td>{{ o.zip }}</td>
-                                <td>{{ o.comment }}</td>
+                                <td class="zip" id="{{ o.id }}">{{ o.comment }}</td>
                                 <td class="zip" id="{{ o.id }}">{{ o.amount }}</td>
                                 <td></a>
                                 </td>
@@ -248,7 +248,7 @@
                             <tr>
                                 <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count}}</th>
                                 <td>{{ o.zip }}</td>
-                                <td>{{ o.comment }}</td>
+                                <td class="freezip" id="{{ o.id }}">{{ o.comment }}</td>
                                 <td class="freezip" id="{{ o.id }}">{{ o.amount }}</td>
                                 <td></a>
                                 </td>
@@ -258,7 +258,7 @@
                             <tr>
                                 <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count|add:order.get_freeziprecords.count}}</th>
                                 <td>{{ o.zip }}</td>
-                                <td>{{ o.comment }}</td>
+                                <td class="stationery" id="{{ o.id }}">{{ o.comment }}</td>
                                 <td class="stationery" id="{{ o.id }}">{{ o.amount }}</td>
                                 <td></a>
                                 </td>

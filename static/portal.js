@@ -69,7 +69,62 @@ window.addEventListener("load", function(){
 
 
         }
+        if (elem.cellIndex == "2" && elem.tagName == "TD") {
 
+            field.type = "text"
+            field.style.width = "300"
+            field.value = elem.innerHTML;
+            temp = elem.innerHTML;
+            elem.innerHTML = "";
+            elem.appendChild(field);
+            field.focus();
+            //console.log('listeners');
+
+            flag = false;
+
+            field.addEventListener("focusout",function(event){
+                if (flag == false) {
+                    //elem.innerHTML = this.value;
+                    elem.innerHTML = temp;
+                    //this.parentNode.removeChild(this);
+                    //console.log('Blur used');
+                    //console.log(event);
+                }
+            });
+            field.addEventListener("keydown",function(event){
+                flag = true;
+                if(event.which == 13){
+                    elem.innerHTML = this.value;
+
+                    a_url = "update_comment/"
+                    a_data = "id="+ elem.attributes.id.value + "&type=" + elem.attributes.class.value + "&comment=" + this.value;
+
+                    var time = performance.now();
+
+
+
+                    $.ajax({ type: "GET",
+                        url: a_url,
+                        data: a_data,
+                        success: function(data){
+                            var xmlDoc = $.parseXML( data );
+                            elem.innerHTML = $(xmlDoc).find( "field" ).text();
+
+                        },
+                        error: function(data){
+                            alert("ERROR. Response: "+data.value);
+                        }
+
+                    });
+                    console.log(performance.now() - time);
+
+
+                }
+                flag = false;
+            });
+
+
+        }
 
 
     });

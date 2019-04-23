@@ -220,11 +220,12 @@ def update_comment(request):
 
         #print request.GET['type']
         tmp = source[request.GET['type']].objects.get(id = request.GET['id'])
-        tmp.amount = request.GET['amount']
+        tmp.comment = request.GET['comment']
+        print tmp.comment
         tmp.save()
 
-        data = serializers.serialize('xml', source[request.GET['type']].objects.filter(id = request.GET['id']), fields=('amount'))
-        #print data
+        data = serializers.serialize('xml', source[request.GET['type']].objects.filter(id = request.GET['id']), fields=('comment'))
+        print data
         return HttpResponse(data)
         #return HttpResponseRedirect('/zip')
 

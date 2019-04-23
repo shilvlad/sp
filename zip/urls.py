@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^add_stationeryzip/', views.add_stationery, name='add_stationery'),
 
     url(r'^update_record/', views.update_record, name='update_record'),
+    url(r'^update_comment/', views.update_comment, name='update_comment'),
 
     url(r'^idea/', views.idea, name='idea'),
 
