@@ -42,9 +42,9 @@ def start(request):
         FZO = FreeZipRecord.objects.filter(order=current_order.id)
         SO = StationeryRecord.objects.filter(order=current_order.id)
 
-        ideas = ZipIdea.objects.all()
-        for idea in ideas:
-            print unicode(idea.author), unicode(idea.topic), unicode(idea.body), unicode(idea.timestamp_create)
+        #TODO Обработку идей добавить
+        #ideas = ZipIdea.objects.all()
+
 
         PreviousOrders = ZipOrder.objects.filter(author=request.user).filter(order_temp=False).order_by("-date")[0:5]
 
