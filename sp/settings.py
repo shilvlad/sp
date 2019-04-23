@@ -127,3 +127,30 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+ORDER_MAIL_LIST = ['ilya.schegolyaev@ramax.ru']
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/error.log',
+        },
+
+        'mail_admins': {
+            'level': 'DEBUG',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'email_backend': 'django.core.mail.backends.smtp.EmailBackend',
+        },
+    },
+
+    'loggers': {
+        'django.request': {
+            'handlers': ['file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

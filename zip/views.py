@@ -18,7 +18,7 @@ from zip.models import ZipRecord, ZipOrder, ZipUsers, FreeZipRecord, StationeryR
 
 from django.core.mail import send_mail
 
-#TODO Реализовать логгирование
+
 
 @login_required
 def start(request):
@@ -44,7 +44,7 @@ def start(request):
 
         ideas = ZipIdea.objects.all()
         for idea in ideas:
-            print idea.author, idea.topic, idea.body, idea.timestamp_create
+            print unicode(idea.author), unicode(idea.topic), unicode(idea.body), unicode(idea.timestamp_create)
 
         PreviousOrders = ZipOrder.objects.filter(author=request.user).filter(order_temp=False).order_by("-date")[0:5]
 
@@ -252,12 +252,11 @@ def to_order(request, order_id):
         #print (tmp)
     except Exception:
         return HttpResponse("Мимо")
-
     if tmp.author == request.user and tmp.order_temp == True:
         tmp.order_temp = False
         tmp.date = datetime.datetime.now()
         tmp.save()
-        send_mail(u'Сделан заказ', u'Создан заказ', 'ilya.schegolyaev@ramax.ru', [ 'ilya.schegolyaev@ramax.ru'], fail_silently=False, )
+        send_mail(u'Сделан заказ', u'Создан заказ', 'ilya.schegolyaev@ramax.ru', settings.ORDER_MAIL_LIST, fail_silently=False, )
 
 
     else:
