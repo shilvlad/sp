@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = ')00ql5e%qi5la0@c_e-^*w^_%s2qh2zc&$+ob15^23-v_2ul&&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -127,28 +127,53 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-ORDER_MAIL_LIST = ['ilya.schegolyaev@ramax.ru']
+ORDER_MAIL_LIST = ['a@iteko.su']
+ORDER_FROM_LIST = 'a@iteko.su'
+
+
+
+DEFAULT_FROM_EMAIL = 'a@iteko.su'
+SERVER_EMAIL = 'from@portal.domain'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+
+ADMINS = [('Ilya', 'a@iteko.su'), ]
+
+SEND_BROKEN_LINK_EMAILS=True
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s  %(message)s'
+        },
+    },
+
     'handlers': {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': 'logs/error.log',
+            'formatter': 'verbose',
         },
 
         'mail_admins': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
-            'email_backend': 'django.core.mail.backends.smtp.EmailBackend',
+            'formatter': 'verbose',
+            'include_html': True,
         },
     },
 
     'loggers': {
         'django.request': {
-            'handlers': ['file', 'mail_admins'],
+            'handlers': ['file', ],
             'level': 'DEBUG',
             'propagate': True,
         },

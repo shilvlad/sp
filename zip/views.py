@@ -5,6 +5,7 @@
 import datetime
 import mimetypes
 import os
+import logging
 
 import xlsxwriter
 from django.conf import settings
@@ -247,6 +248,7 @@ def stationeryrecord_delete(request, zip_record_id):
 
 @login_required
 def to_order(request, order_id):
+    logger = logging.getLogger(__name__)
     try:
         tmp = ZipOrder.objects.get(id=order_id)
         #print (tmp)
@@ -256,8 +258,9 @@ def to_order(request, order_id):
         tmp.order_temp = False
         tmp.date = datetime.datetime.now()
         tmp.save()
-        send_mail(u'Сделан заказ', u'Создан заказ', 'a@iteko.su', settings.ORDER_MAIL_LIST, fail_silently=False, )
+        send_mail(u'Сделан заказ', u'Создан заказ', settings.ORDER_FROM_LIST, settings.ORDER_MAIL_LIST, fail_silently=False, )
 
+        #logger.debug('Создан заказ')
 
     else:
         return HttpResponse("Чужие заказы трогать низзя!")
