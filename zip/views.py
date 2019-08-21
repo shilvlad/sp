@@ -280,7 +280,7 @@ def to_order(request, order_id):
         tmp.order_temp = False
         tmp.date = datetime.datetime.now()
         tmp.save()
-        send_mail(u'Сделан заказ', u'Создан заказ', settings.ORDER_FROM_LIST, settings.ORDER_MAIL_LIST, fail_silently=False, )
+        #send_mail(u'Сделан заказ', u'Создан заказ', settings.ORDER_FROM_LIST, settings.ORDER_MAIL_LIST, fail_silently=False, )
 
         #logger.debug('Создан заказ')
 
