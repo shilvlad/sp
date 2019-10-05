@@ -208,68 +208,70 @@
                 </h4>
 
                 <div id="mTab">
-                {% for order in orders %}
-                    <h5>Заказ №{{ order.id }} | {{ order.author }} (Создан {{ order.date }})
-                        <a href="close_order/{{ order.id }}/">
-                            <button type="button" class="btn btn-info btn-sm"
-                                    onclick="return confirm('Заказ выполнен?');">
-                                Закрыть
-                            </button>
-                        </a>
+                    {% for order in orders %}
+                        <h5>Заказ №{{ order.id }} | {{ order.author }} (Создан {{ order.date }})
+                            <a href="close_order/{{ order.id }}/">
+                                <button type="button" class="btn btn-info btn-sm"
+                                        onclick="return confirm('Заказ выполнен?');">
+                                    Закрыть
+                                </button>
+                            </a>
 
-                    </h5>
-                    <span class="badge badge-pill badge-secondary">Заказчик: {{ order.author }}</span>
-                    <br>
-                    <span class="badge badge-pill badge-secondary">Создан: {{ order.date}}</span>
+                        </h5>
+                        <span class="badge badge-pill badge-secondary">Заказчик: {{ order.author }}</span>
+                        <br>
+                        <span class="badge badge-pill badge-secondary">Создан: {{ order.date}}</span>
 
-                    <table class="table  table-hover table-sm" >
-                        <thead>
-                        <tr>
-                            <th scope="col" width="3%">№</th>
-
-                            <th scope="col" width="53%">Наименование</th>
-                            <th scope="col" width="32%">Комментарий</th>
-                            <th scope="col" width="10%">Количество</th>
-                            <th scope="col" width="2%"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        {% for o in order.get_ziprecords %}
+                        <table class="table  table-hover table-sm" >
+                            <thead>
                             <tr>
-                                <th scope="row">{{ forloop.counter }}</th>
-                                <td>{{ o.zip }}</td>
-                                <td class="zip" id="{{ o.id }}">{{ o.comment }}</td>
-                                <td class="zip" id="{{ o.id }}">{{ o.amount }}</td>
-                                <td></a>
-                                </td>
+                                <th scope="col" width="3%">№</th>
+
+                                <th scope="col" width="53%">Наименование</th>
+                                <th scope="col" width="32%">Комментарий</th>
+                                <th scope="col" width="10%">Количество</th>
+                                <th scope="col" width="2%"></th>
                             </tr>
-                        {% endfor %}
-                        {% for o in order.get_freeziprecords %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count}}</th>
-                                <td>{{ o.zip }}</td>
-                                <td class="freezip" id="{{ o.id }}">{{ o.comment }}</td>
-                                <td class="freezip" id="{{ o.id }}">{{ o.amount }}</td>
-                                <td></a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        {% for o in order.get_stationeryrecords %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count|add:order.get_freeziprecords.count}}</th>
-                                <td>{{ o.zip }}</td>
-                                <td class="stationery" id="{{ o.id }}">{{ o.comment }}</td>
-                                <td class="stationery" id="{{ o.id }}">{{ o.amount }}</td>
-                                <td></a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endfor %}
+                            </thead>
+                            <tbody>
+
+                            {% for o in order.get_ziprecords %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ o.zip }}</td>
+                                    <td class="zip" id="{{ o.id }}">{{ o.comment }}</td>
+                                    <td class="zip" id="{{ o.id }}">{{ o.amount }}</td>
+                                    <td></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% for o in order.get_freeziprecords %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count}}</th>
+                                    <td>{{ o.zip }}</td>
+                                    <td class="freezip" id="{{ o.id }}">{{ o.comment }}</td>
+                                    <td class="freezip" id="{{ o.id }}">{{ o.amount }}</td>
+                                    <td></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% for o in order.get_stationeryrecords %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count|add:order.get_freeziprecords.count}}</th>
+                                    <td>{{ o.zip }}</td>
+                                    <td class="stationery" id="{{ o.id }}">{{ o.comment }}</td>
+                                    <td class="stationery" id="{{ o.id }}">{{ o.amount }}</td>
+                                    <td></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endfor %}
                 </div>
-
+                <hr align="left" width="300" size="2" color=" #36E052 " />
+                <hr align="left" width="250" size="2" color=" #36E052 " />
+                <hr align="left" width="200" size="2" color=" #36E052 " />
                 <h4>
                     <center>Заказы (Закрытые)</center>
                 </h4>
