@@ -13,7 +13,7 @@ class Profile(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=1000, blank=True)
     apps = models.ManyToManyField(Applications, related_name= 'accessed_apps')
-    da = models.ForeignKey(Applications, on_delete=models.CASCADE)
+    #da = models.ForeignKey(Applications, on_delete=models.CASCADE, blank=True)
 
     def __unicode__(self):
         return self.user.username
