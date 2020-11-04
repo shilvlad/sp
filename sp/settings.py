@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'zip',
     'dev_test',
+    'passes',
 ]
 
 MIDDLEWARE = [
