@@ -2,6 +2,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+import datetime
 
 # Create your models here.
 class Passes(models.Model):
@@ -19,13 +20,16 @@ class Passes(models.Model):
 
     def get_passes(self):
         try:
-            tmp = Passes.object.all()
+            tmp = Passes.objects.all()
         except Exception:
             tmp = None
         return tmp
 
+
+
     def __unicode__(self):
         desc = str(self.passtype) + " - " + str(self.passnumber) + " - " + str(self.passexpired)
+        #desc = ''
         return desc
 
 

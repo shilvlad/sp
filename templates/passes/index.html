@@ -22,8 +22,8 @@
             <div class="col-xs-12 col-sm-6 col-md-8 col-lg-1">
 
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-7">
-                <h4>Текущие пропуска</h4>
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-4">
+                <h4>Добавление пропуска</h4>
                 <form action="" method="post" class="form">
                     {% csrf_token %}
 
@@ -34,15 +34,96 @@
 
 
             </div>
-
-
-
-
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-7">
                 <h4>Выданные пропуска</h4>
-                {% for i in passes %}
-                    {{ i.owner }} (№{{ i.passnumber }} ({{ i.passtype }}) ) - {{ i.passexpired }} <br>
-                {% endfor %}
+
+
+
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#home">Пропуска МАШ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#profile">Пропуска АФЛ</a>
+                    </li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade active show" id="home">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">ФИО</th>
+                                <th scope="col">Номер</th>
+                                <th scope="col">Истекает</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in passes %}
+                                {% if i.passtype == 'mash' %}
+
+                                    <tr class="{{ i.status }}">
+                                        <td>{{ i.owner }}</td>
+                                        <td>{{ i.passnumber }}</td>
+                                        <td>{{ i.passexpired }} (Осталось: {{ i.days_left }})</td>
+                                        <td>
+                                            <a href="pass_edit/{{ i.id }}">
+                                                <img src="{% static '\icons\pencil.png' %} ">
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="pass_delete/{{ i.id }}">
+                                                <img src="{% static '\icons\delete.png' %} ">
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade " id="profile">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">ФИО</th>
+                                <th scope="col">Номер</th>
+                                <th scope="col">Истекает</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in passes %}
+                                {% if i.passtype == 'afl' %}
+
+                                    <tr>
+                                        <td>{{ i.owner }}</td>
+                                        <td>{{ i.passnumber }}</td>
+                                        <td>{{ i.passexpired }}</td>
+                                        <td>
+                                            <a href="pass_edit/{{ i.id }}">
+                                                <img src="{% static '\icons\pencil.png' %} ">
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="pass_delete/{{ i.id }}">
+                                                <img src="{% static '\icons\delete.png' %} ">
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+
+
             </div>
         </div>
     </div>
