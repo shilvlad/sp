@@ -4,5 +4,8 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.start, name='start'),
-    url(r'^add_pass/', views.add_pass, name='add_pass'),
+    url(r'^(?P<pass_id>[0-9]+)$', views.start, name='start'),
+
+    url(r'^delete_pass/(?P<pass_id>[0-9]+)/$', views.delete_pass, name='delete_pass'),
+    #url(r'^roadsheet_delete/(?P<sheet_id>[0-9]+)/$', views.roadsheet_delete, name='roadsheet_delete'),
     ]

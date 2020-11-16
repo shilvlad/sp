@@ -24,7 +24,7 @@
             </div>
             <div class="col-xs-12 col-sm-6 col-md-8 col-lg-4">
                 <h4>Добавление пропуска</h4>
-                <form action="" method="post" class="form">
+                <form action="/passes/" method="post" class="form">
                     {% csrf_token %}
 
                     {% bootstrap_form form layout='horizontal' size='small' %}
@@ -68,12 +68,12 @@
                                         <td>{{ i.passnumber }}</td>
                                         <td>{{ i.passexpired }} (Осталось: {{ i.days_left }})</td>
                                         <td>
-                                            <a href="pass_edit/{{ i.id }}">
+                                            <a href="{{ i.id }}">
                                                 <img src="{% static '\icons\pencil.png' %} ">
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="pass_delete/{{ i.id }}">
+                                            <a href="delete_pass/{{ i.id }}" onclick="return confirm('Ну и что, вот прям удаляем?');">
                                                 <img src="{% static '\icons\delete.png' %} ">
                                             </a>
                                         </td>
@@ -108,7 +108,7 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="pass_delete/{{ i.id }}">
+                                            <a href="delete_pass/{{ i.id }}" onclick="return confirm('Ну и что, вот прям удаляем?');">
                                                 <img src="{% static '\icons\delete.png' %} ">
                                             </a>
                                         </td>

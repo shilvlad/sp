@@ -4,11 +4,13 @@ from django.forms import ModelForm
 from django import forms
 
 
-class DateInput(forms.DateInput):
-    input_type = 'date'
+#class DateInput(forms.DateInput()):
+#    input_type = 'date'
+
 
 class PassesForm(ModelForm):
-    passexpired = forms.DateField(widget=DateInput)
+    #passexpired = forms.DateField(widget=DateInput)
+    #passexpired = forms.DateField()
 
     class Meta:
         model = Passes
@@ -20,4 +22,12 @@ class PassesForm(ModelForm):
             "passtype": "Тип пропуска",
 
         }
-        #widgets = {'author': forms.HiddenInput()}
+        widgets = {
+            'passexpired': forms.DateInput(
+                format=('%Y-%m-%d'),  # Формат, в котором ХРАНИТСЯ дата
+                attrs = {
+                    'class':'form-control',
+                    'type':'date'
+                }
+            ),
+        }

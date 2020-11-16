@@ -7,10 +7,12 @@ from passes.forms import PassesForm
 from passes.models import Passes, PassesUsers
 from django.contrib.auth.models import User
 import datetime
+from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 
 # Create your views here.
 @login_required
-def start(request):
+def start(request, pass_id=None):
     context = {}
     try:
         context['role'] = PassesUsers.objects.get(user=request.user.id).role
@@ -28,15 +30,21 @@ def start(request):
                 response.save()
 
 
-        context['form'] = PassesForm()
 
-        context['passes'] = Passes.objects.all()
+        if pass_id == None:
+            context['form'] = PassesForm()
+        else:
+            context['form'] = PassesForm(instance=Passes.objects.get(id=pass_id))
+
+
+        context['passes'] = Passes.objects.all().filter(deleted=False)
 
         warning_days = 120
         danger_days = 90
         critical_days = 30
 
         for i in context['passes']:
+            print(i.passexpired)
             i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
 
             if i.days_left > warning_days:
@@ -51,12 +59,6 @@ def start(request):
             else:
                 i.status = "table-dark"
 
-
-
-
-        for i in context['passes']:
-            print(i.status)
-
     if context['role'] == 'controller':
         pass
 
@@ -67,5 +69,14 @@ def start(request):
 
 
 @login_required
-def add_pass(request):
-    pass
+def delete_pass(request, pass_id):
+    try:
+        p = Passes.objects.get(id=pass_id)
+        p.deleted = True
+        p.save()
+
+
+    except Exception:
+        return HttpResponse("Что-то не то с ID пропуска: " + str(pass_id))
+    #return redirect(reverse('start'))
+    return redirect('/passes/')

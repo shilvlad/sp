@@ -17,6 +17,7 @@ class Passes(models.Model):
     passexpired = models.DateField(blank=True, editable=True, null=True)
     passnumber = models.CharField(max_length=20, editable=True, blank=True)
     passtype = models.CharField(max_length=10, choices=PASS_TYPES)
+    deleted = models.BooleanField(default=False)
 
     def get_passes(self):
         try:
