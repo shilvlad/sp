@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from django.conf import settings
 from passes.forms import PassesForm
-from passes.models import Passes, PassesUsers
+from passes.models import Passes, PassesUsers, PassesEmails
 from django.contrib.auth.models import User
 import datetime
 from django.shortcuts import redirect
@@ -83,26 +83,31 @@ def delete_pass(request, pass_id):
     return redirect('/passes/')
 
 def check_passes(request):
-    #TODO Убрать print
-    print ("Checking passes")
-
     warning_days = 120
     danger_days = 90
     critical_days = 30
 
     passes = Passes.objects.all().filter(deleted=False)
     warning_passes = []
+    msg = ''
     for i in passes:
         i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
         if i.days_left <= warning_days and i.days_left > danger_days + 1:
             warning_passes.append(i)
 
-    msg = u'Пропуск: %s; ФИО: %s; Истекает: %s' % (i.passtype, unicode(i.owner), i.passexpired)
+
+    if warning_passes is not None:
+        print("Expired exists")
+        for i in warning_passes:
+            msg += u'Пропуск: %s; ФИО: %s; Истекает: %s \n\n' % (i.passtype, unicode(i.owner), i.passexpired)
+        emails = list(PassesEmails.objects.all().values_list('email', flat=True))
+        #print (emails)
+        send_mail(u'ВНИМАНИЕ! Истекают пропуска', msg, 'admin@portal.iteko.su', emails, fail_silently=False)
 
 
 
-    print(send_mail(u'ВНИМАНИЕ! Истекают пропуска', msg, 'admin@portal.iteko.su',
-              ['a@iteko.su'], fail_silently=False))
+
+    #
 
 
     return HttpResponse("OK")
