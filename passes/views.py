@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -- coding: utf-8 --
 from __future__ import unicode_literals
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse
@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 import datetime
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
+from django.core.mail import send_mail
 
 # Create your views here.
 @login_required
@@ -44,7 +45,7 @@ def start(request, pass_id=None):
         critical_days = 30
 
         for i in context['passes']:
-            print(i.passexpired)
+
             i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
 
             if i.days_left > warning_days:
@@ -80,3 +81,28 @@ def delete_pass(request, pass_id):
         return HttpResponse("Что-то не то с ID пропуска: " + str(pass_id))
     #return redirect(reverse('start'))
     return redirect('/passes/')
+
+def check_passes(request):
+    #TODO Убрать print
+    print ("Checking passes")
+
+    warning_days = 120
+    danger_days = 90
+    critical_days = 30
+
+    passes = Passes.objects.all().filter(deleted=False)
+    warning_passes = []
+    for i in passes:
+        i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
+        if i.days_left <= warning_days and i.days_left > danger_days + 1:
+            warning_passes.append(i)
+
+    msg = u'Пропуск: %s; ФИО: %s; Истекает: %s' % (i.passtype, unicode(i.owner), i.passexpired)
+
+
+
+    print(send_mail(u'ВНИМАНИЕ! Истекают пропуска', msg, 'admin@portal.iteko.su',
+              ['a@iteko.su'], fail_silently=False))
+
+
+    return HttpResponse("OK")
