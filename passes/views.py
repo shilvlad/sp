@@ -101,8 +101,9 @@ def check_passes(request):
         for i in warning_passes:
             msg += u'Пропуск: %s; ФИО: %s; Истекает: %s \n\n' % (i.passtype, unicode(i.owner), i.passexpired)
         emails = list(PassesEmails.objects.all().values_list('email', flat=True))
-        #print (emails)
-        send_mail(u'ВНИМАНИЕ! Истекают пропуска', msg, 'admin@portal.iteko.su', emails, fail_silently=False)
+
+        for m in emails:
+            send_mail(u'ВНИМАНИЕ! Истекают пропуска', msg, 'admin@portal.iteko.su', [m], fail_silently=False)
 
 
 
