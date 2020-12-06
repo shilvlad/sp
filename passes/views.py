@@ -38,13 +38,20 @@ def start(request, pass_id=None):
             context['form'] = PassesForm(instance=Passes.objects.get(id=pass_id))
 
 
-        context['passes'] = Passes.objects.all().filter(deleted=False)
+
+
+        allPasses = Passes.objects.all().filter(deleted=False)
 
         warning_days = 120
         danger_days = 90
         critical_days = 30
 
-        for i in context['passes']:
+        for i in allPasses:
+            print(i.author, request.user)
+            if i.author == request.user:
+                i.showmy = True
+            else:
+                i.showmy = False
 
             i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
 
@@ -59,6 +66,13 @@ def start(request, pass_id=None):
 
             else:
                 i.status = "table-dark"
+
+
+
+
+        context['passes'] = allPasses
+
+
 
     if context['role'] == 'controller':
         pass
@@ -95,20 +109,10 @@ def check_passes(request):
         if i.days_left <= warning_days and i.days_left > danger_days + 1:
             warning_passes.append(i)
 
-
     if warning_passes is not None:
-        print("Expired exists")
         for i in warning_passes:
             msg += u'Пропуск: %s; ФИО: %s; Истекает: %s \n\n' % (i.passtype, unicode(i.owner), i.passexpired)
         emails = list(PassesEmails.objects.all().values_list('email', flat=True))
-
         for m in emails:
             send_mail(u'ВНИМАНИЕ! Истекают пропуска', msg, 'admin@portal.iteko.su', [m], fail_silently=False)
-
-
-
-
-    #
-
-
     return HttpResponse("OK")

@@ -62,6 +62,7 @@
                             <tbody>
                             {% for i in passes %}
                                 {% if i.passtype == 'mash' %}
+                                    
 
                                     <tr class="{{ i.status }}">
                                         <td>{{ i.owner }}</td>
@@ -78,6 +79,8 @@
                                             </a>
                                         </td>
                                     </tr>
+
+
                                 {% endif %}
                             {% endfor %}
                             </tbody>
