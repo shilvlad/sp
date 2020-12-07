@@ -62,7 +62,7 @@
                             <tbody>
                             {% for i in passes %}
                                 {% if i.passtype == 'mash' %}
-                                    
+
 
                                     <tr class="{{ i.status }}">
                                         <td>{{ i.owner }}</td>
@@ -140,195 +140,46 @@
 
             </div>
             <div class="col-xs-12 col-sm-6 col-md-8 col-lg-10">
-                <h4>
-                    <center>Заказы (Открытые) <a href="export/excel" >EXPORT -> Excel</a></center>
-                </h4>
 
-                <div id="mTab">
-                    {% for order in orders %}
-                        <h5>Заказ №{{ order.id }} | {{ order.author }} (Создан {{ order.date }})
-                            <a href="close_order/{{ order.id }}/">
-                                <button type="button" class="btn btn-info btn-sm"
-                                        onclick="return confirm('Заказ выполнен?');">
-                                    Закрыть
-                                </button>
-                            </a>
-
-                        </h5>
-                        <span class="badge badge-pill badge-secondary">Заказчик: {{ order.author }}</span>
-                        <br>
-                        <span class="badge badge-pill badge-secondary">Создан: {{ order.date}}</span>
-
-                        <table class="table  table-hover table-sm" >
+                <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th scope="col" width="3%">№</th>
-
-                                <th scope="col" width="53%">Наименование</th>
-                                <th scope="col" width="32%">Комментарий</th>
-                                <th scope="col" width="10%">Количество</th>
-                                <th scope="col" width="2%"></th>
+                                <th scope="col">Тип</th>
+                                <th scope="col">ФИО</th>
+                                <th scope="col">Номер</th>
+                                <th scope="col">Истекает</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
                             </tr>
                             </thead>
                             <tbody>
+                            {% for i in passes %}
 
-                            {% for o in order.get_ziprecords %}
-                                <tr>
-                                    <th scope="row">{{ forloop.counter }}</th>
-                                    <td>{{ o.zip }}</td>
-                                    <td class="zip" id="{{ o.id }}">{{ o.comment }}</td>
-                                    <td class="zip" id="{{ o.id }}">{{ o.amount }}</td>
-                                    <td></a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            {% for o in order.get_freeziprecords %}
-                                <tr>
-                                    <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count}}</th>
-                                    <td>{{ o.zip }}</td>
-                                    <td class="freezip" id="{{ o.id }}">{{ o.comment }}</td>
-                                    <td class="freezip" id="{{ o.id }}">{{ o.amount }}</td>
-                                    <td></a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            {% for o in order.get_stationeryrecords %}
-                                <tr>
-                                    <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count|add:order.get_freeziprecords.count}}</th>
-                                    <td>{{ o.zip }}</td>
-                                    <td class="stationery" id="{{ o.id }}">{{ o.comment }}</td>
-                                    <td class="stationery" id="{{ o.id }}">{{ o.amount }}</td>
-                                    <td></a>
-                                    </td>
-                                </tr>
+
+
+                                    <tr class="{{ i.status }}">
+                                        <td>{{ i.passtype }}</td>
+                                        <td>{{ i.owner }}</td>
+                                        <td>{{ i.passnumber }}</td>
+                                        <td>{{ i.passexpired }} (Осталось: {{ i.days_left }})</td>
+                                        <td>
+                                            <a href="{{ i.id }}">
+                                                <img src="{% static '\icons\pencil.png' %} ">
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="delete_pass/{{ i.id }}" onclick="return confirm('Ну и что, вот прям удаляем?');">
+                                                <img src="{% static '\icons\delete.png' %} ">
+                                            </a>
+                                        </td>
+                                    </tr>
+
+
                             {% endfor %}
                             </tbody>
                         </table>
-                    {% endfor %}
-                </div>
-                <hr align="left" width="300" size="2" color=" #36E052 " />
-                <hr align="left" width="250" size="2" color=" #36E052 " />
-                <hr align="left" width="200" size="2" color=" #36E052 " />
-                <h4>
-                    <center>Заказы (Закрытые)</center>
-                </h4>
-                {% for order in orders_closed %}
-                    <h5>Заказ №{{ order.id }}
-                        <a href="hide_order/{{ order.id }}/">
-                            <button type="button" class="btn btn-info btn-sm" onclick="return confirm('Закрываем?');">
-                                Скрыть
-                            </button>
-                        </a>
-                        <a href="reopen_order/{{ order.id }}/">
-                            <button type="button" class="btn btn-info btn-sm"
-                                    onclick="return confirm('Переоткрыть заказ?');">
-                                Вернуть
-                            </button>
-                        </a>
-                    </h5>
-                    <span class="badge badge-pill badge-secondary">Заказчик: {{ order.author }}</span>
-                    <br>
-                    <span class="badge badge-pill badge-secondary">Закрыт: {{ order.date_closed}}</span>
 
-                    <table class="table  table-hover table-sm">
-                        <thead>
-                        <tr>
-                            <th scope="col">№</th>
 
-                            <th scope="col">Наименование</th>
-                            <th scope="col">Количество</th>
-                            <th scope="col">Комментарий</th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        {% for o in order.get_ziprecords %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter }}</th>
-                                <td>{{ o.zip }}</td>
-                                <td>{{ o.amount }}</td>
-                                <td>{{ o.comment }}</td>
-                                <td></a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        {% for o in order.get_freeziprecords %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count}}</th>
-                                <td>{{ o.zip }}</td>
-                                <td>{{ o.amount }}</td>
-                                <td>{{ o.comment }}</td>
-                                <td></a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        {% for o in order.get_stationeryrecords %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count|add:order.get_freeziprecords.count}}</th>
-                                <td>{{ o.zip }}</td>
-                                <td>{{ o.amount }}</td>
-                                <td>{{ o.comment }}</td>
-                                <td></a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endfor %}
-
-                <h4>
-                    <center>Заказы (Скрытые)</center>
-                </h4>
-                {% for order in orders_hidden %}
-                    <h5>Заказ №{{ order.id }} | {{ order.author }}
-                    </h5>
-                    <table class="table  table-hover table-sm">
-                        <thead>
-                        <tr>
-                            <th scope="col">№</th>
-
-                            <th scope="col">Наименование</th>
-                            <th scope="col">Количество</th>
-                            <th scope="col">Комментарий</th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        {% for o in order.get_ziprecords %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter }}</th>
-                                <td>{{ o.zip }}</td>
-                                <td>{{ o.amount }}</td>
-                                <td>{{ o.comment }}</td>
-                                <td></a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        {% for o in order.get_freeziprecords %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count}}</th>
-                                <td>{{ o.zip }}</td>
-                                <td>{{ o.amount }}</td>
-                                <td>{{ o.comment }}</td>
-                                <td></a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        {% for o in order.get_stationeryrecords %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count|add:order.get_freeziprecords.count}}</th>
-                                <td>{{ o.zip }}</td>
-                                <td>{{ o.amount }}</td>
-                                <td>{{ o.comment }}</td>
-                                <td></a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endfor %}
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-8 col-lg-1"></div>
