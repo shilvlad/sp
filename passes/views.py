@@ -71,7 +71,7 @@ def start(request, pass_id=None):
 
 
         #context['passes'] = allPasses
-        context['passes'] = sorted(allPasses, key=lambda student: student.passexpired)
+        context['passes'] = sorted(allPasses, key=lambda passes: passes.passexpired)
 
 
     if context['role'] == 'controller':
@@ -105,7 +105,7 @@ def start(request, pass_id=None):
                 i.status = "table-dark"
 
         #context['passes'] = allPasses
-        context['passes'] = sorted(allPasses, key=lambda student: student.passexpired)
+        context['passes'] = sorted(allPasses, key=lambda passes: passes.passexpired)
 
     if context['role'] == 'admin':
         pass
