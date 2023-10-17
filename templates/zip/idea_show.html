@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block title %}
+    Предложения
+{% endblock %}
+
+<script src="{% static "portal.js" %}"></script>
+
+{% block content_controller %}
+
+    {% for idea in ideas %}
+        <table width=1000>
+
+            <tr>
+                <td width=900>
+                    <table class="table  table-hover table-sm" >
+
+                        <tr>
+                            <td width="80%">
+                                {{ idea.topic }}
+                            </td>
+                            <td  width="10%">
+                                {{ idea.author }}
+                            </td>
+                            <td  width="10%">
+                                {{ idea.timestamp_create }}
+                            </td>
+
+                        </tr>
+
+
+
+                    </table>
+                </td>
+
+            </tr>
+            <tr>
+            <tr>
+                <td>{{ idea.body }}</td>
+
+            </tr>
+            </tr>
+
+
+        </table>
+    {% endfor %}
+{% endblock %}

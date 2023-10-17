@@ -1,0 +1,405 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block title %}
+    Заказ расходки
+{% endblock %}
+
+<script src="{% static "portal.js" %}"></script>
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-1">
+                <br>
+                <a href="idea/" onclick="window_open(href, 800, 450); return false;">
+                    <button type="button" class="btn btn-info btn-sm">
+                        Есть идея!
+                    </button>
+                </a>
+
+
+                <br>
+
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-7">
+                <br>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link show active" data-toggle="tab" href="#home"><abbr title="Заказ стандартного ЗиП">ЗиП</abbr></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link show" data-toggle="tab" href="#profile"><abbr title="Заказ того, что не вошло в стандартный ЗиП, редкозаказываемые позиции">Произвольный</abbr></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link show" data-toggle="tab" href="#stationery"><abbr title="Тут понятно :-)">Канцелярия</abbr></a>
+                    </li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade active show" id="home">
+
+                        <form action="add_zip/" method="post" class="form">
+                            {% csrf_token %}
+                            <br>
+                            {% bootstrap_form form layout='horizontal' size='small' %}
+
+                            <button type="submit" class="btn btn-primary btn-sm">Добавить</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="profile">
+                        <form action="add_freezip/" method="post" class="form">
+                            {% csrf_token %}
+                            <br>
+                            {% bootstrap_form form_free layout='horizontal' size='small' %}
+
+                            <button type="submit" class="btn btn-primary btn-sm">Добавить</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="stationery">
+                        <form action="add_stationeryzip/" method="post" class="form">
+                            {% csrf_token %}
+                            <br>
+                            {% bootstrap_form form_stationery layout='horizontal' size='small' %}
+
+                            <button type="submit" class="btn btn-primary btn-sm">Добавить</button>
+                        </form>
+                    </div>
+
+                </div>
+
+
+
+                <br>
+                <div class="alert alert-dismissible alert-primary">
+
+                    <h5>Текущий заказ № {{ current_order }}</h5>
+
+
+                    <table class="table  table-hover table-sm" id="mTab">
+                        <thead>
+                        <tr>
+                            <th scope="col" width="3%" >№</th>
+                            <th scope="col" width="53%">Наименование</th>
+                            <th scope="col" width="32%">Комментарий</th>
+                            <th scope="col" width="10%">Количество</th>
+                            <th scope="col" class="-colLG" width="2%"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for o in order %}
+                            <tr>
+                                <td scope="row">{{ forloop.counter }}</td>
+                                <td >{{ o.zip }}</td>
+
+                                <td >{{ o.comment }}</td>
+                                <td class="zip" id="{{ o.id }}">{{ o.amount }}</td>
+                                <td>
+                                    <a href="record_delete/{{ o.id }}"><img src="{% static '\icons\delete.png' %} "</a>
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        {% for o in freeorder %}
+                            <tr>
+                                <td scope="row">{{ forloop.counter|add:order.count}}</td>
+                                <td>{{ o.zip }}</td>
+                                <td>{{ o.comment }}</td>
+                                <td class="freezip" id="{{ o.id }}">{{ o.amount }}</td>
+                                <td>
+                                    <a href="freerecord_delete/{{ o.id }}"><img src="{% static '\icons\delete.png' %} "</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        {% for o in stationeryorder %}
+                            <tr>
+                                <td scope="row">{{ forloop.counter |add:order.count|add:freeorder.count}}</td>
+                                <td>{{ o.zip }}</td>
+                                <td>{{ o.comment }}</td>
+                                <td class="stationery" id="{{ o.id }}">{{ o.amount }}</td>
+                                <td>
+                                    <a href="stationeryrecord_delete/{{ o.id }}"><img src="{% static '\icons\delete.png' %} "</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <form action="to_order/{{ current_order }}/" method="post" class="form">
+                        {% csrf_token %}
+                        {% if order.count or stationeryorder or freeorder %}
+                            <button type="submit" class="btn btn-primary btn-sm"
+                                    onclick="return confirm('Отправляем?');">Отправить заказ
+                            </button>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                <h4>Предыдущие заказы</h4>
+                {% for o in prev_orders %}
+                    <table class="table  table-hover table-sm">
+                        <thead>
+                        <tr>
+                            <h6>Заказ №{{ o.id }} от {{ o.date | date:"d.m.Y H:m" }}</h6>
+                            <small id="fileHelp" class="form-text text-muted">
+                                Статус:
+                                {% if o.order_closed  and not o.order_hidden %}
+                                    Заказан {{ o.date_closed | date:"d.m.Y H:m" }}
+                                {% elif not o.order_closed  and not o.order_hidden %}
+                                    В работе
+                                {% elif o.order_closed and o.order_hidden %}
+                                    Завершен
+                                {% endif %}
+                            </small>
+                        </tr>
+
+                        </thead>
+                        <tbody>
+
+                        {% for i in o.get_ziprecords.all %}
+                            <tr>
+                                <td>{{ i.zip }}</td>
+                                <td>{{ i.amount }}</td>
+                            </tr>
+                        {% endfor %}
+                        {% for i in o.get_freeziprecords.all %}
+                            <tr>
+                                <td>{{ i.zip }}</td>
+                                <td>{{ i.amount }}</td>
+                            </tr>
+                        {% endfor %}
+                        {% for i in o.get_stationeryrecords.all %}
+                            <tr>
+                                <td>{{ i.zip }}</td>
+                                <td>{{ i.amount }}</td>
+                            </tr>
+                        {% endfor %}
+
+
+                        </tbody>
+                    </table>
+                    <br>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content_controller %}
+    <a href="idea_show">IDEAS</a>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-1">
+
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-10">
+                <h4>
+                    <center>Заказы (Открытые) <a href="export/excel" >EXPORT -> Excel</a></center>
+                </h4>
+
+                <div id="mTab">
+                    {% for order in orders %}
+                        <h5>Заказ №{{ order.id }} | {{ order.author }} (Создан {{ order.date }})
+                            <a href="close_order/{{ order.id }}/">
+                                <button type="button" class="btn btn-info btn-sm"
+                                        onclick="return confirm('Заказ выполнен?');">
+                                    Закрыть
+                                </button>
+                            </a>
+
+                        </h5>
+                        <span class="badge badge-pill badge-secondary">Заказчик: {{ order.author }}</span>
+                        <br>
+                        <span class="badge badge-pill badge-secondary">Создан: {{ order.date}}</span>
+
+                        <table class="table  table-hover table-sm" >
+                            <thead>
+                            <tr>
+                                <th scope="col" width="3%">№</th>
+
+                                <th scope="col" width="53%">Наименование</th>
+                                <th scope="col" width="32%">Комментарий</th>
+                                <th scope="col" width="10%">Количество</th>
+                                <th scope="col" width="2%"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for o in order.get_ziprecords %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ o.zip }}</td>
+                                    <td class="zip" id="{{ o.id }}">{{ o.comment }}</td>
+                                    <td class="zip" id="{{ o.id }}">{{ o.amount }}</td>
+                                    <td></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% for o in order.get_freeziprecords %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count}}</th>
+                                    <td>{{ o.zip }}</td>
+                                    <td class="freezip" id="{{ o.id }}">{{ o.comment }}</td>
+                                    <td class="freezip" id="{{ o.id }}">{{ o.amount }}</td>
+                                    <td></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% for o in order.get_stationeryrecords %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count|add:order.get_freeziprecords.count}}</th>
+                                    <td>{{ o.zip }}</td>
+                                    <td class="stationery" id="{{ o.id }}">{{ o.comment }}</td>
+                                    <td class="stationery" id="{{ o.id }}">{{ o.amount }}</td>
+                                    <td></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endfor %}
+                </div>
+                <hr align="left" width="300" size="2" color=" #36E052 " />
+                <hr align="left" width="250" size="2" color=" #36E052 " />
+                <hr align="left" width="200" size="2" color=" #36E052 " />
+                <h4>
+                    <center>Заказы (Закрытые)</center>
+                </h4>
+                {% for order in orders_closed %}
+                    <h5>Заказ №{{ order.id }}
+                        <a href="hide_order/{{ order.id }}/">
+                            <button type="button" class="btn btn-info btn-sm" onclick="return confirm('Закрываем?');">
+                                Скрыть
+                            </button>
+                        </a>
+                        <a href="reopen_order/{{ order.id }}/">
+                            <button type="button" class="btn btn-info btn-sm"
+                                    onclick="return confirm('Переоткрыть заказ?');">
+                                Вернуть
+                            </button>
+                        </a>
+                    </h5>
+                    <span class="badge badge-pill badge-secondary">Заказчик: {{ order.author }}</span>
+                    <br>
+                    <span class="badge badge-pill badge-secondary">Закрыт: {{ order.date_closed}}</span>
+
+                    <table class="table  table-hover table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">№</th>
+
+                            <th scope="col">Наименование</th>
+                            <th scope="col">Количество</th>
+                            <th scope="col">Комментарий</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for o in order.get_ziprecords %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ o.zip }}</td>
+                                <td>{{ o.amount }}</td>
+                                <td>{{ o.comment }}</td>
+                                <td></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% for o in order.get_freeziprecords %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count}}</th>
+                                <td>{{ o.zip }}</td>
+                                <td>{{ o.amount }}</td>
+                                <td>{{ o.comment }}</td>
+                                <td></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% for o in order.get_stationeryrecords %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count|add:order.get_freeziprecords.count}}</th>
+                                <td>{{ o.zip }}</td>
+                                <td>{{ o.amount }}</td>
+                                <td>{{ o.comment }}</td>
+                                <td></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endfor %}
+
+                <h4>
+                    <center>Заказы (Скрытые)</center>
+                </h4>
+                {% for order in orders_hidden %}
+                    <h5>Заказ №{{ order.id }} | {{ order.author }}
+                    </h5>
+                    <table class="table  table-hover table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">№</th>
+
+                            <th scope="col">Наименование</th>
+                            <th scope="col">Количество</th>
+                            <th scope="col">Комментарий</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for o in order.get_ziprecords %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ o.zip }}</td>
+                                <td>{{ o.amount }}</td>
+                                <td>{{ o.comment }}</td>
+                                <td></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% for o in order.get_freeziprecords %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count}}</th>
+                                <td>{{ o.zip }}</td>
+                                <td>{{ o.amount }}</td>
+                                <td>{{ o.comment }}</td>
+                                <td></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% for o in order.get_stationeryrecords %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter|add:order.get_ziprecords.count|add:order.get_freeziprecords.count}}</th>
+                                <td>{{ o.zip }}</td>
+                                <td>{{ o.amount }}</td>
+                                <td>{{ o.comment }}</td>
+                                <td></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endfor %}
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-1"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content_admin %}
+    <a href="/admin">АДМИНКА ПОРТАЛА</a>
+
+{% endblock %}
