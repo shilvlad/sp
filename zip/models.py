@@ -6,12 +6,12 @@ from django.contrib.auth.models import User
 # Create your models here.
 class ZipNames(models.Model):
     name = models.CharField(max_length=300, editable = True)
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class StationaryNames(models.Model):
     name = models.CharField(max_length=300, editable=True)
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class ZipOrder(models.Model):
@@ -41,24 +41,24 @@ class ZipOrder(models.Model):
         except Exception:
             tmp = None
         return tmp
-    def __unicode__(self):
+    def __str__(self):
         #return "Заказ № " + unicode(self.id) + " - Закрыт: " + unicode(self.order_closed) + ", заказчик: " + unicode(self.author)
-        return unicode(str(self.id))
+        return str(self.id)
 
 class ZipRecord(models.Model):
     zip = models.ForeignKey(ZipNames, on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
     order = models.ForeignKey(ZipOrder, on_delete=models.CASCADE, default=0)
     comment = models.CharField(max_length=500, editable = True, blank=True)
-    def __unicode__(self):
-        return unicode(self.id) + ". " + unicode(self.zip) + " - " + unicode(self.amount)
+    def __str__(self):
+        return str(self.id) + ". " + str(self.zip) + " - " + str(self.amount)
 
 class FreeZipRecord(models.Model):
     zip = models.CharField(max_length=500, editable = True, blank=True)
     amount = models.IntegerField(default=0)
     order = models.ForeignKey(ZipOrder, on_delete=models.CASCADE, default=0)
     comment = models.CharField(max_length=500, editable = True, blank=True)
-    def __unicode__(self):
+    def __str__(self):
         return unicode(self.id) + ". " + unicode(self.zip) + " - " + unicode(self.amount)
 
 class StationeryRecord(models.Model):
@@ -67,7 +67,7 @@ class StationeryRecord(models.Model):
     order = models.ForeignKey(ZipOrder, on_delete=models.CASCADE, default=0)
     comment = models.CharField(max_length=500, editable=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return unicode(self.id) + ". " + unicode(self.zip) + " - " + unicode(self.amount)
 
 class ZipUsers(models.Model):
@@ -78,7 +78,7 @@ class ZipUsers(models.Model):
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=100, choices=ROLES_CHOICES)
-    def __unicode__(self):
+    def __str__(self):
         return str(self.user) + " - " + str(self.role)
 
 class ZipIdea(models.Model):
