@@ -47,13 +47,22 @@ def start(request, pass_id=None):
         critical_days = 30
 
         for i in allPasses:
-            print(i.author, request.user)
+            # print(i.author, request.user)
             if i.author == request.user:
                 i.showmy = True
             else:
                 i.showmy = False
 
-            i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
+            print(i.passexpired, datetime.date.today())
+
+            try:
+                #i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
+                i.days_left = (i.passexpired - datetime.date.today()).days
+            except Exception:
+                print ("Raised exception% ", i)
+
+
+
 
             if i.days_left > warning_days:
                 i.status = "table-success"
