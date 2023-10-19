@@ -143,7 +143,7 @@ def check_passes(request):
     warning_days = 120
     danger_days = 90
     critical_days = 30
-
+    send_mail(u'ВНИМАНИЕ! Истекают пропуска', 'ssss', 'admin@portal.iteko.su', ['a@iteko.su'], fail_silently=False)
     passes = Passes.objects.all().filter(deleted=False).filter(passtype='mash')
     warning_passes = []
     msg = ''
