@@ -53,7 +53,7 @@ def start(request, pass_id=None):
             else:
                 i.showmy = False
 
-            print(i.passexpired, datetime.date.today())
+
 
             try:
                 #i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
@@ -99,7 +99,11 @@ def start(request, pass_id=None):
             else:
                 i.showmy = False
 
-            i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
+            try:
+                # i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
+                i.days_left = (i.passexpired - datetime.date.today()).days
+            except Exception:
+                print("Raised exception% ", i)
 
             if i.days_left > warning_days:
                 i.status = "table-success"
