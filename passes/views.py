@@ -117,7 +117,7 @@ def start(request, pass_id=None):
             else:
                 i.status = "table-dark"
 
-        #context['passes'] = allPasses
+
         context['passes'] = sorted(allPasses, key=lambda passes: passes.passexpired)
 
     if context['role'] == 'admin':
@@ -136,7 +136,7 @@ def delete_pass(request, pass_id):
 
     except Exception:
         return HttpResponse("Что-то не то с ID пропуска: " + str(pass_id))
-    #return redirect(reverse('start'))
+
     return redirect('/passes/')
 
 def check_passes(request):
@@ -154,7 +154,7 @@ def check_passes(request):
 
     if warning_passes is not None:
         for i in warning_passes:
-            msg += u'Пропуск: %s; ФИО: %s; Истекает: %s \n\n' % (i.passtype, unicode(i.owner), i.passexpired)
+            msg += u'Пропуск: %s; ФИО: %s; Истекает: %s \n\n' % (i.passtype, str(i.owner), i.passexpired)
         emails = list(PassesEmails.objects.all().values_list('email', flat=True))
         for m in emails:
             send_mail(u'ВНИМАНИЕ! Истекают пропуска', msg, 'admin@portal.iteko.su', [m], fail_silently=False)
