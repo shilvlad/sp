@@ -28,9 +28,8 @@ class Passes(models.Model):
 
 
 
-    def __unicode__(self):
+    def __str__(self):
         desc = str(self.passtype) + " - " + str(self.passnumber) + " - " + str(self.passexpired)
-        #desc = ''
         return desc
 
 
@@ -43,12 +42,12 @@ class PassesUsers(models.Model):
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=100, choices=ROLES_CHOICES)
-    def __unicode__(self):
+    def __str__(self):
         return str(self.user) + " - " + str(self.role)
 
 
 class PassesEmails(models.Model):
     email = models.CharField(max_length=100)
 
-    def __unicode__(self):
+    def __str__(self):
         return str(self.email)

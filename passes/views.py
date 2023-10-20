@@ -159,3 +159,4 @@ def check_passes(request):
         for m in emails:
             send_mail(u'ВНИМАНИЕ! Истекают пропуска', msg, 'admin@portal.iteko.su', [m], fail_silently=False)
     return HttpResponse("OK")
+
