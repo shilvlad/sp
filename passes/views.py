@@ -8,37 +8,49 @@ from passes.models import Passes, PassesUsers, PassesEmails
 from django.contrib.auth.models import User
 import datetime
 from django.shortcuts import redirect
-
 from django.core.mail import send_mail
+import logging
+
+
 
 # Create your views here.
 @login_required
 def start(request, pass_id=None):
+    applog = logging.getLogger('applog')
+    errorlog = logging.getLogger('errorlog')
+    #applog.debug('debug message')
+    #applog.info('info message')
+    #applog.warning('warn message')
+    #applog.error('error message')
+    #applog.critical('critical message')
+    #errorlog.debug('debug message')
+    #errorlog.info('info message')
+    #errorlog.warning('warn message')
+    #errorlog.error('error message')
+    #errorlog.critical('critical message')
+
+
     context = {}
     try:
         context['role'] = PassesUsers.objects.get(user=request.user.id).role
     except Exception:
+        errorlog.critical('Ошибка ролевого доступа. КОНТЕКСТ: {user: %s}' % (request.user))
         return HttpResponse("START. Критическая ошибка контроля ролей. Обратитесь к администратору")
 
     if context['role'] == 'teamlead':
 
         if request.method == 'POST':
-            # Если сабмит, то добавляем пропуск и говорим что добавили
+
             form = PassesForm(request.POST)
             if form.is_valid():
                 response = form.save(commit=False)
                 response.author = User.objects.get(username=request.user)
                 response.save()
 
-
-
         if pass_id == None:
             context['form'] = PassesForm()
         else:
             context['form'] = PassesForm(instance=Passes.objects.get(id=pass_id))
-
-
-
 
         allPasses = Passes.objects.all().filter(deleted=False)
 
@@ -47,23 +59,17 @@ def start(request, pass_id=None):
         critical_days = 30
 
         for i in allPasses:
-            # print(i.author, request.user)
+
             if i.author == request.user:
                 i.showmy = True
             else:
                 i.showmy = False
 
-
-
             try:
                 #i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
                 i.days_left = (i.passexpired - datetime.date.today()).days
             except Exception:
-                print ("Raised exception% ", i)
-
-
-
-
+                errorlog.critical('Возникло исключение при подсчете оставшихся до окончания пропуска дней. КОНТЕКСТ: {user: %s | pass: :s}' % (request.user, i))
             if i.days_left > warning_days:
                 i.status = "table-success"
 
@@ -75,9 +81,6 @@ def start(request, pass_id=None):
 
             else:
                 i.status = "table-dark"
-
-
-
 
         #context['passes'] = allPasses
         context['passes'] = sorted(allPasses, key=lambda passes: passes.passexpired)
@@ -93,7 +96,6 @@ def start(request, pass_id=None):
         critical_days = 30
 
         for i in allPasses:
-            print(i.author, request.user)
             if i.author == request.user:
                 i.showmy = True
             else:
@@ -103,7 +105,7 @@ def start(request, pass_id=None):
                 # i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
                 i.days_left = (i.passexpired - datetime.date.today()).days
             except Exception:
-                print("Raised exception% ", i)
+                errorlog.critical('Возникло исключение при подсчете оставшихся до окончания пропуска дней. КОНТЕКСТ: {user: %s | pass: }' % (request.user, i))
 
             if i.days_left > warning_days:
                 i.status = "table-success"
@@ -116,7 +118,6 @@ def start(request, pass_id=None):
 
             else:
                 i.status = "table-dark"
-
 
         context['passes'] = sorted(allPasses, key=lambda passes: passes.passexpired)
 
@@ -143,7 +144,7 @@ def check_passes(request):
     warning_days = 120
     danger_days = 90
     critical_days = 30
-    send_mail(u'ВНИМАНИЕ! Истекают пропуска', 'ssss', 'admin@portal.iteko.su', ['a@iteko.su'], fail_silently=False)
+
     passes = Passes.objects.all().filter(deleted=False).filter(passtype='mash')
     warning_passes = []
     msg = ''

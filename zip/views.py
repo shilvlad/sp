@@ -49,7 +49,8 @@ def start(request):
         PreviousOrders = ZipOrder.objects.filter(author=request.user).filter(order_temp=False).order_by("-date")[0:5]
 
         if request.method == 'POST':
-            print ("ERROR in main view. Method POST used")
+
+            errorlog.critical('Ошибка в главном виде. Method POST used. КОНТЕКСТ: {user: %s }' % (request.user))
         else:
             form = ZipRecordForm()
             form.fields['order'].queryset = ZipOrder.objects.filter(author=request.user).filter(order_temp=True)
@@ -99,7 +100,7 @@ def add_zip(request):
             if form.is_valid():
                 new_order = form.save()
                 t = ZipRecord.objects.filter(zip= new_order.zip,order=new_order.order, comment=new_order.comment)
-                #print t
+
                 if t.count() > 1:
                     a = t[0].amount.__int__() + t[1].amount.__int__()
                     n = ZipRecord.objects.get(id=t[0].id)
@@ -109,13 +110,16 @@ def add_zip(request):
                     t[1].delete()
                 return HttpResponseRedirect('/zip')
             else:
-                print("ERROR: form.is_valid in add_zip")
+
+                errorlog.critical('form.is_valid in add_zip(). КОНТЕКСТ: {user: %s }' % (request.user))
+
         else:
             return HttpResponseRedirect('/zip')
 
 
     else:
-        print("ERROR: Not teamlead")
+
+        errorlog.critical('Not teamlead. КОНТЕКСТ: {user: %s }' % (request.user))
         return HttpResponseRedirect('/zip')
 
 @login_required
@@ -132,7 +136,7 @@ def add_freezip(request):
             if form.is_valid():
                 new_order = form.save()
                 t = FreeZipRecord.objects.filter(zip= new_order.zip,order=new_order.order, comment=new_order.comment)
-                #print t
+
                 if t.count() > 1:
                     a = t[0].amount.__int__() + t[1].amount.__int__()
                     n = FreeZipRecord.objects.get(id=t[0].id)
@@ -142,13 +146,15 @@ def add_freezip(request):
                     t[1].delete()
                 return HttpResponseRedirect('/zip')
             else:
-                print("ERROR: form.is_valid in add_freezip")
+                errorlog.critical('form.is_valid in add_freezip(). КОНТЕКСТ: {user: %s }' % (request.user))
+
         else:
             return HttpResponseRedirect('/zip')
 
 
     else:
-        print("ERROR: Not teamlead")
+
+        errorlog.critical('Not teamlead. КОНТЕКСТ: {user: %s }' % (request.user))
         return HttpResponseRedirect('/zip')
 
 @login_required
@@ -157,6 +163,7 @@ def add_stationery(request):
     try:
         context['role'] = ZipUsers.objects.get(user=request.user.id).role
     except Exception:
+        errorlog.critical('Ошибка ролевого доступа. КОНТЕКСТ: {user: %s}' % (request.user))
         return HttpResponse("START. Критическая ошибка контроля ролей. Обратитесь к администратору")
 
     if context['role'] == 'teamlead':
@@ -165,7 +172,7 @@ def add_stationery(request):
             if form.is_valid():
                 new_order = form.save()
                 t = StationeryRecord.objects.filter(zip= new_order.zip,order=new_order.order, comment=new_order.comment)
-                #print t
+
                 if t.count() > 1:
                     a = t[0].amount.__int__() + t[1].amount.__int__()
                     n = StationeryRecord.objects.get(id=t[0].id)
@@ -175,19 +182,20 @@ def add_stationery(request):
                     t[1].delete()
                 return HttpResponseRedirect('/zip')
             else:
-                print("ERROR: form.is_valid in add_stationery")
+                errorlog.critical('form.is_valid in add_stationery. КОНТЕКСТ: {user: %s}' % (request.user))
+
         else:
             return HttpResponseRedirect('/zip')
 
 
     else:
-        print("ERROR: Not teamlead")
+        errorlog.critical('Not teamlead. КОНТЕКСТ: {user: %s }' % (request.user))
         return HttpResponseRedirect('/zip')
 
 @login_required
 def update_record(request):
     if request.method == 'POST':
-        #return HttpResponse(request.POST['id'])
+
         return HttpResponseRedirect('/zip')
 
     else:
@@ -373,15 +381,10 @@ def clean_list(list):
             zips_clean.append([a, b, c, d])
     return zips_clean
 
-# Печать списка
-def print_list(list):
-    for a,b,c,d in (list):
-        print (a,b,c,d)
-
 @login_required
 def export_excel(request):
     excel_file_name = settings.BASE_DIR + "/tmp/temp.xls"
-    #print excel_file_name
+
     try:
         role = ZipUsers.objects.get(user=request.user.id).role
     except Exception:

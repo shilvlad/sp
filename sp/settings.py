@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Application definition
 
@@ -164,12 +165,22 @@ LOGGING = {
             'filename': 'logs/error.log',
             'formatter': 'verbose',
         },
+        'file_app': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/app.log',
+            'formatter': 'verbose',
+        },
 
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
             'formatter': 'verbose',
             'include_html': True,
+        },
+        'console':{
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
         },
     },
 
@@ -179,5 +190,17 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'applog': {
+            'handlers': ['file_app', 'console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+
+       'errorlog': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+
     },
 }

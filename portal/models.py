@@ -6,7 +6,7 @@ from django.db.models.signals import post_save
 class Applications(models.Model):
     name = models.CharField(max_length=20, editable=True)
     fullname = models.CharField(max_length=300, editable=True)
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class Profile(models.Model):
@@ -15,7 +15,7 @@ class Profile(models.Model):
     apps = models.ManyToManyField(Applications, related_name= 'accessed_apps')
     #da = models.ForeignKey(Applications, on_delete=models.CASCADE, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.user.username
     def get_apps(self):
         return self.objects.filter(user=self.user).values_list()
