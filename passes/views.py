@@ -1,7 +1,7 @@
-# -- coding: utf-8 --
+
 from __future__ import unicode_literals
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, HttpResponse
 from django.conf import settings
 from passes.forms import PassesForm
 from passes.models import Passes, PassesUsers, PassesEmails
@@ -22,7 +22,7 @@ def start(request, pass_id=None):
     try:
         context['role'] = PassesUsers.objects.get(user=request.user.id).role
     except Exception:
-        errorlog.critical('Ошибка ролевого доступа. КОНТЕКСТ: {user: %s}' % (request.user))
+        errorlog.critical('Ошибка ролевого доступа. КОНТЕКСТ: {user: %s}' % (request.user,))
         return HttpResponse("START. Критическая ошибка контроля ролей. Обратитесь к администратору")
 
     if context['role'] == 'teamlead':
@@ -35,7 +35,7 @@ def start(request, pass_id=None):
                 response.author = User.objects.get(username=request.user)
                 response.save()
 
-        if pass_id == None:
+        if pass_id is None:
             context['form'] = PassesForm()
         else:
             context['form'] = PassesForm(instance=Passes.objects.get(id=pass_id))
@@ -57,7 +57,8 @@ def start(request, pass_id=None):
                 #i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
                 i.days_left = (i.passexpired - datetime.date.today()).days
             except Exception:
-                errorlog.critical('Возникло исключение при подсчете оставшихся до окончания пропуска дней. КОНТЕКСТ: {user: %s | pass: :s}' % (request.user, i))
+                errorlog.critical('Возникло исключение при подсчете оставшихся до окончания '
+                                  'пропуска дней. КОНТЕКСТ: {user: %s | pass: %s}' % (request.user, i))
             if i.days_left > warning_days:
                 i.status = "table-success"
 
@@ -93,7 +94,7 @@ def start(request, pass_id=None):
                 # i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
                 i.days_left = (i.passexpired - datetime.date.today()).days
             except Exception:
-                errorlog.critical('Возникло исключение при подсчете оставшихся до окончания пропуска дней. КОНТЕКСТ: {user: %s | pass: }' % (request.user, i))
+                errorlog.critical('Возникло исключение при подсчете оставшихся до окончания пропуска дней. КОНТЕКСТ: {user: %s | pass: %s}' % (request.user, i))
 
             if i.days_left > warning_days:
                 i.status = "table-success"
@@ -144,8 +145,12 @@ def check_passes(request):
     if warning_passes is not None:
         for i in warning_passes:
             msg += u'Пропуск: %s; ФИО: %s; Истекает: %s \n\n' % (i.passtype, str(i.owner), i.passexpired)
+            applog.info('Истекающий срок действия: %s - %s - %s' % (i.passtype, str(i.owner), i.passexpired))
         emails = list(PassesEmails.objects.all().values_list('email', flat=True))
         for m in emails:
             send_mail(u'ВНИМАНИЕ! Истекают пропуска', msg, 'admin@portal.iteko.su', [m], fail_silently=False)
+
+            applog.info('Информация о пропусках отправлена на адрес ' + m)
+
     return HttpResponse("OK")
 

@@ -84,7 +84,7 @@ def start(request):
 
 
     if context['role'] == 'admin':
-        #send_mail(u'Вход в админку', u'Выполнен вход в администраторскую панель', 'ilya.schegolyaev@ramax.ru', [ 'ilya.schegolyaev@ramax.ru'], fail_silently=False, )
+
         pass
 
     return render(request, 'zip/index.html', context)
@@ -105,25 +105,20 @@ def add_zip(request):
             if form.is_valid():
                 new_order = form.save()
                 t = ZipRecord.objects.filter(zip= new_order.zip,order=new_order.order, comment=new_order.comment)
-
                 if t.count() > 1:
                     a = t[0].amount.__int__() + t[1].amount.__int__()
                     n = ZipRecord.objects.get(id=t[0].id)
                     n.amount = a
                     n.save()
-
                     t[1].delete()
                 return HttpResponseRedirect('/zip')
             else:
-
                 errorlog.critical('form.is_valid in add_zip(). КОНТЕКСТ: {user: %s }' % (request.user))
-
         else:
             return HttpResponseRedirect('/zip')
 
 
     else:
-
         errorlog.critical('Not teamlead. КОНТЕКСТ: {user: %s }' % (request.user))
         return HttpResponseRedirect('/zip')
 
@@ -423,7 +418,6 @@ def export_excel(request):
     # Group list
     groups = []
     for a,b,c,d in (zips):
-        #print a,b,c,d
         if d not in groups:
             groups.append(d)
 
@@ -465,21 +459,17 @@ def export_excel(request):
         ws.write(row, col + 1, 'AMOUNT')
         ws.write(row, col + 2, 'COMMENT')
         row += 1
-
         for item, amount, comment, group in (zips_by_group[str(g)]):
             ws.write(row, col, item)
             ws.write(row, col + 1, amount)
             ws.write(row, col + 2, comment)
             row += 1
-
     ws = workbook.add_worksheet("Orders")
     row = 0
     ws.write(row, 0, 'Order')
     for oo in orders:
         row += 1
         ws.write(row, 0, oo.id)
-
-
     workbook.close()
     fp = open(excel_file_name, "rb");
     response = HttpResponse(fp.read());
