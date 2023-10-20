@@ -11,25 +11,13 @@ from django.shortcuts import redirect
 from django.core.mail import send_mail
 import logging
 
+applog = logging.getLogger('applog')
+errorlog = logging.getLogger('errorlog')
 
 
 # Create your views here.
 @login_required
 def start(request, pass_id=None):
-    applog = logging.getLogger('applog')
-    errorlog = logging.getLogger('errorlog')
-    #applog.debug('debug message')
-    #applog.info('info message')
-    #applog.warning('warn message')
-    #applog.error('error message')
-    #applog.critical('critical message')
-    #errorlog.debug('debug message')
-    #errorlog.info('info message')
-    #errorlog.warning('warn message')
-    #errorlog.error('error message')
-    #errorlog.critical('critical message')
-
-
     context = {}
     try:
         context['role'] = PassesUsers.objects.get(user=request.user.id).role

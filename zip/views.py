@@ -19,10 +19,13 @@ from zip.models import ZipRecord, ZipOrder, ZipUsers, FreeZipRecord, StationeryR
 
 from django.core.mail import send_mail
 
+applog = logging.getLogger('applog')
+errorlog = logging.getLogger('errorlog')
 
 
 @login_required
 def start(request):
+
     context = {}
     try:
         context['role'] = ZipUsers.objects.get(user=request.user.id).role
@@ -88,6 +91,8 @@ def start(request):
 
 @login_required
 def add_zip(request):
+    applog = logging.getLogger('applog')
+    errorlog = logging.getLogger('errorlog')
     context = {}
     try:
         context['role'] = ZipUsers.objects.get(user=request.user.id).role
@@ -210,7 +215,7 @@ def update_record(request):
         tmp.save()
 
         data = serializers.serialize('xml', source[request.GET['type']].objects.filter(id = request.GET['id']), fields=('amount'))
-        #print data
+
         return HttpResponse(data)
         #return HttpResponseRedirect('/zip')
 
@@ -278,19 +283,18 @@ def stationeryrecord_delete(request, zip_record_id):
 
 @login_required
 def to_order(request, order_id):
-    logger = logging.getLogger(__name__)
+
     try:
         tmp = ZipOrder.objects.get(id=order_id)
-        #print (tmp)
+
     except Exception:
+        errorlog.error("Ошибка исполнения ZipOrder.objects.get(id=order_id)")
         return HttpResponse("Мимо")
     if tmp.author == request.user and tmp.order_temp == True:
         tmp.order_temp = False
         tmp.date = datetime.datetime.now()
         tmp.save()
-        #send_mail(u'Сделан заказ', u'Создан заказ', settings.ORDER_FROM_LIST, settings.ORDER_MAIL_LIST, fail_silently=False, )
-
-        #logger.debug('Создан заказ')
+        applog.info(f'Создан заказ. КОНТЕКСТ: (User: %s, Номер заказа: %s)' % (request.user, tmp.id))
 
     else:
         return HttpResponse("Чужие заказы трогать низзя!")
@@ -300,13 +304,14 @@ def to_order(request, order_id):
 def close_order(request, order_id):
     try:
         tmp = ZipOrder.objects.get(id=order_id)
-        #print (tmp)
     except Exception:
+        errorlog.error("Ошибка исполнения ZipOrder.objects.get(id=order_id)")
         return HttpResponse("Getting order Exception recieved")
 
     try:
         role = ZipUsers.objects.get(user=request.user.id).role
     except Exception:
+        errorlog.critical("HIDE_ORDER. Критическая ошибка контроля ролей")
         return HttpResponse("HIDE_ORDER. Критическая ошибка контроля ролей. Обратитесь к администратору")
 
     if tmp.order_closed == False and role == 'controller':
@@ -316,6 +321,7 @@ def close_order(request, order_id):
         tmp.save()
 
     else:
+        errorlog.critical("Критическая ошибка скрытия заказа")
         return HttpResponse("Критическая ошибка скрытия заказа")
     return HttpResponseRedirect('/zip')
 
@@ -324,11 +330,13 @@ def reopen_order(request, order_id):
     try:
         tmp = ZipOrder.objects.get(id=order_id)
     except Exception:
+        errorlog.critical("Getting order Exception recieved")
         return HttpResponse("Getting order Exception recieved")
 
     try:
         role = ZipUsers.objects.get(user=request.user.id).role
     except Exception:
+        errorlog.critical("HIDE_ORDER. Критическая ошибка контроля ролей. Обратитесь к администратору")
         return HttpResponse("HIDE_ORDER. Критическая ошибка контроля ролей. Обратитесь к администратору")
 
     if tmp.order_closed == True and role == 'controller':
@@ -338,6 +346,7 @@ def reopen_order(request, order_id):
         tmp.save()
 
     else:
+        errorlog.critical("Критическая ошибка открытия заказа")
         return HttpResponse("Критическая ошибка открытия заказа")
     return HttpResponseRedirect('/zip')
 
@@ -388,6 +397,7 @@ def export_excel(request):
     try:
         role = ZipUsers.objects.get(user=request.user.id).role
     except Exception:
+
         return HttpResponse("START. Критическая ошибка контроля ролей. Обратитесь к администратору")
 
     if role == 'controller':
