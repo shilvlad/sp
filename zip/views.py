@@ -18,7 +18,6 @@ from zip.forms import ZipRecordForm, FreeZipRecordForm, StationeryRecordForm, Zi
 from zip.models import ZipRecord, ZipOrder, ZipUsers, FreeZipRecord, StationeryRecord, ZipIdea
 from portal.models import Events
 
-from django.core.mail import send_mail
 
 applog = logging.getLogger('applog')
 errorlog = logging.getLogger('errorlog')
@@ -79,14 +78,16 @@ def start(request):
         context['current_order'] = current_order.id
 
     if context['role'] == 'controller':
-        context['orders'] = ZipOrder.objects.filter(order_temp=False, order_closed=False, order_hidden=False).order_by("-date")
-        context['orders_closed'] = ZipOrder.objects.filter(order_temp=False, order_closed=True, order_hidden=False).order_by("-date")
-        context['orders_hidden'] = ZipOrder.objects.filter(order_temp=False, order_closed=True, order_hidden=True).order_by("-date")
+        context['orders'] = ZipOrder.objects.filter(order_temp=False,
+                                                    order_closed=False, order_hidden=False).order_by("-date")
+        context['orders_closed'] = ZipOrder.objects.filter(order_temp=False,
+                                                           order_closed=True, order_hidden=False).order_by("-date")
+        context['orders_hidden'] = ZipOrder.objects.filter(order_temp=False,
+                                                           order_closed=True, order_hidden=True).order_by("-date")
 
 
     if context['role'] == 'admin':
         context['events'] = Events.objects.all()
-        print(len(context['events']))
 
     return render(request, 'zip/index.html', context)
 

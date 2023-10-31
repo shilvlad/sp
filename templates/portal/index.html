@@ -12,5 +12,39 @@
     Главная
 {% endblock %}
 
+{% load static %}
 
 
+{% block content_admin %}
+    <a href="/admin">АДМИНКА ПОРТАЛА</a><br>
+    <link href="{% static "/portal/style.css" %} " rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="{% static "/portal/script.js" %} "></script>
+
+
+
+
+    <p>События:</p>
+
+    <table border="1" id="myTable">
+        <tr>
+            <th>Время<br><input type="text" id="myInput" onkeyup="myFunction()"></th>
+            <th>REMOTE_ADDR<br><input type="text" id="myInput" onkeyup="myFunction()"></th>
+            <th>REQUEST_METHOD</th>
+            <th>user</th>
+            <th>path</th>
+            <th>delay</th>
+        </tr>
+
+        {% for e in events %}
+            <tr>
+                <td>{{ e.timestamp }}</td>
+                <td>{{ e.remote_addr }}</td>
+                <td>{{ e.request_method }}</td>
+                <td>{{ e.user }}</td>
+                <td>{{ e.path }}</td>
+                <td>{{ e.delay }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

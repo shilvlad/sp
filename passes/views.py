@@ -47,14 +47,11 @@ def start(request, pass_id=None):
         critical_days = 30
 
         for i in allPasses:
-
             if i.author == request.user:
                 i.showmy = True
             else:
                 i.showmy = False
-
             try:
-                #i.days_left = int(str(i.passexpired - datetime.date.today()).split()[0])
                 i.days_left = (i.passexpired - datetime.date.today()).days
             except Exception:
                 errorlog.critical('Возникло исключение при подсчете оставшихся до окончания '

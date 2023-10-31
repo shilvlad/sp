@@ -6,14 +6,30 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
+import logging
+from .models import Events
 
+from django.contrib import messages
 
+applog = logging.getLogger('applog')
+errorlog = logging.getLogger('errorlog')
 
-# Create your views here.
 @login_required
 def start(request):
-    #return render(request, 'portal/index.html', {'username':request.user.username})
-    return HttpResponseRedirect('/zip')
+    try:
+        user = User.objects.get(id=request.user.id)
+    except Exception:
+        errorlog.critical("Error when checking user role")
+    if user.is_superuser:
+        context = {}
+        context['events'] = Events.objects.all()
+        context['role'] = 'admin'
+        return render(request, 'portal/index.html', context)
+    else:
+        #TODO  В зависимости от пользовательских настроек переходим на дефолтную страницу
+        #Пока что переходим на ЗиП
+        return HttpResponseRedirect('/zip')
+
 
 
 def user_login(request):
@@ -30,17 +46,17 @@ def user_login(request):
             else:
                 return HttpResponse("Your account is disabled.")
         else:
-            #TODO Добавить обработку неправильного логина/пароля
-            #return HttpResponse("Invalid login details supplied.")
-            return HttpResponseRedirect('/')
+            messages.error(request, 'Неверное имя пользователя или пароль')
+            return redirect('login')
     else:
         context['next_url'] = next_url
         return render(request, 'portal/login.html', context)
 
 
+@login_required
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect('/zip')
+    return HttpResponseRedirect('/')
 
 @login_required
 def user_chpwd(request):
