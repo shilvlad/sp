@@ -511,7 +511,7 @@ def idea_show(request):
     context['role'] = ZipUsers.objects.get(user=request.user.id).role
     ideas = ZipIdea.objects.all()
     context['ideas'] = ideas
-    #print ideas
+
     return render(request, 'zip/idea_show.html', context)
 
 

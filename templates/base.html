@@ -22,6 +22,19 @@
     {% load static %}
     <script src="{% static "portal.js" %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static "portal.css" %} " />
+
+
+    <script type="text/javascript" src="{% static "/base/_scripts/jquery-2.0.2.min.js" %} "></script>
+    <script type="text/javascript" src="{% static "/base/_scripts/main.js" %} "></script>
+
+    <link href="{% static "/base/_css/Icomoon/style.css" %} " rel="stylesheet" type="text/css" />
+
+
+    <link href="{% static "/base/_css/main.css" %} " rel="stylesheet" type="text/css" />
+
+
+
+
 </head>
 
 
@@ -58,13 +71,24 @@
 </nav>
 
 
+<body>
+<div id="loading">
+    <div id="loading-center">
+        <div id="loading-center-absolute">
+            <div class="object" id="object_one"></div>
+            <div class="object" id="object_two"></div>
+            <div class="object" id="object_three"></div>
+            <div class="object" id="object_four"></div>
+            <div class="object" id="object_big"></div>
+        </div>
+    </div>
 
-
+</div>
 
 
 {% if role == 'teamlead' %}{% block content %}{% endblock %}{% endif %}
 {% if role == 'admin' %}{% block content_admin %}{% endblock %}{% endif %}
 {% if role == 'controller' %}{% block content_controller %}{% endblock %}{% endif %}
 
-
+</body>
 
