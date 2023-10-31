@@ -401,5 +401,23 @@
 
 {% block content_admin %}
     <a href="/admin">АДМИНКА ПОРТАЛА</a>
+    События:
+    <table>
+        <tr>
+            <td>timestamp</td>
+            <td>user</td>
+            <td>path</td>
+            <td>delay</td>
+        </tr>
+
+        {% for e in events %}
+            <tr>
+                <td>{{ e.timestamp }}</td>
+                <td>{{ e.user }}</td>
+                <td>{{ e.path }}</td>
+                <td>{{ e.delay }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 
 {% endblock %}

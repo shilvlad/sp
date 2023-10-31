@@ -16,6 +16,7 @@ from django.core import serializers
 
 from zip.forms import ZipRecordForm, FreeZipRecordForm, StationeryRecordForm, ZipIdeaForm
 from zip.models import ZipRecord, ZipOrder, ZipUsers, FreeZipRecord, StationeryRecord, ZipIdea
+from portal.models import Events
 
 from django.core.mail import send_mail
 
@@ -84,8 +85,7 @@ def start(request):
 
 
     if context['role'] == 'admin':
-
-        pass
+        context['events'] = Events.objects.all()
 
     return render(request, 'zip/index.html', context)
 
