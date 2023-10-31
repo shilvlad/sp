@@ -86,6 +86,7 @@ def start(request):
 
     if context['role'] == 'admin':
         context['events'] = Events.objects.all()
+        print(len(context['events']))
 
     return render(request, 'zip/index.html', context)
 

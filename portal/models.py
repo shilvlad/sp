@@ -35,3 +35,5 @@ class Events(models.Model):
     user = models.TextField(max_length=1000, blank=True)
     path = models.TextField(max_length=1000, blank=True)
     delay = models.FloatField(blank=True)
+    remote_addr = models.TextField(max_length=1000, blank=True)
+    request_method = models.TextField(max_length=1000, blank=True)

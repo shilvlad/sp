@@ -15,6 +15,8 @@ class RequestTimeMiddleware:
         tmp.user = request.user
         tmp.path = request.path
         tmp.delay = time.monotonic() - timestamp
+        tmp.remote_addr = request.META['REMOTE_ADDR']
+        tmp.request_method = request.META['REQUEST_METHOD']
         tmp.save()
 
         return response
