@@ -1,0 +1,28 @@
+
+#myInput {
+    width: 100%; /* Полная ширина */
+    font-size: 10px; /* Увеличить размер шрифта */
+    margin-bottom: 1px; /* Добавить некоторое пространство под входом */
+}
+
+#myTable {
+    border-collapse: collapse; /* Свернуть границы */
+    width: 100%; /* Полная ширина */
+    border: 1px solid #ddd; /* Добавить серую границу */
+    font-size: 10px; /* Увеличить размер шрифта */
+}
+
+#myTable th, #myTable td {
+    text-align: left; /* Выравнивание текста по левому краю */
+    padding: 1px; /* Добавить отступ */
+}
+
+#myTable tr {
+    /* Добавить нижнюю границу для всех строк таблицы */
+    border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+    /* Добавить серый цвет фона для заголовка таблицы и при наведении курсора мыши */
+    background-color: #f1f1f1;
+}
