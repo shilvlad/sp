@@ -1,0 +1,14 @@
+{% for i in last_issues %}
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">{{ i.supply.supply }}</h4>
+        <h6 class="card-subtitle mb-2 text-muted">{{ i.barcode}} ({{ i.device_model}})</h6>
+        <p class="card-text">{{ i.recipient}}</p>
+        <p class="card-text">{{ i.placement}}</p>
+
+        <!--<a href="#" class="card-link">Card link</a>
+        <a href="#" class="card-link">Another link</a>--!>
+    </div>
+</div>
+    <br>
+{% endfor %}

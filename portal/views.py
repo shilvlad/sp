@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
 import logging
-from .models import Events
+from .models import Events, Profile
+from supplies.models import SuppliesUsers
 
 from django.contrib import messages
 
@@ -26,9 +27,18 @@ def start(request):
         context['role'] = 'admin'
         return render(request, 'portal/index.html', context)
     else:
-        #TODO  В зависимости от пользовательских настроек переходим на дефолтную страницу
-        #Пока что переходим на ЗиП
-        return HttpResponseRedirect('/zip')
+        #В зависимости от пользовательских настроек переходим на дефолтную страницу
+        try:
+            defaultapp = Profile.objects.get(user=user).default_app
+            print("Default app for user %s is %s" % (user, defaultapp))
+            if not defaultapp:
+                defaultapp = 'zip'
+
+        except Exception as e:
+            errorlog.critical(e)
+            defaultapp = 'zip'
+
+        return HttpResponseRedirect('/%s' % defaultapp)
 
 
 
@@ -42,6 +52,24 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
+                try:
+                    user = User.objects.get(id=request.user.id)
+                    print("User on login is: ", user)
+                except Exception:
+                    errorlog.critical("Error when checking user role")
+
+
+
+                try:
+                    #context['apps'] = list(Profile.objects.get(user=user).apps.all().values_list('name', flat=True))
+                    request.session['apps'] = list(Profile.objects.get(user=user).apps.all().values_list('name', flat=True))
+                    print("Applications on login are: ", request.session['apps'])
+                except Exception as e:
+                    errorlog.critical(e)
+                    return HttpResponse("SUPPLIES. Критическая ошибка. Обратитесь к администратору")
+
+
+
                 return HttpResponseRedirect(next_url)
             else:
                 return HttpResponse("Your account is disabled.")

@@ -9,7 +9,7 @@
 {% bootstrap_messages %}
 
 {% block title %}
-    Заказ ЗиП
+    Заказ расходных материалов
 {% endblock %}
 
 <script src="{% static "portal.js" %}"></script>
@@ -19,11 +19,6 @@
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-8 col-lg-1">
                 <br>
-                <a href="idea/" onclick="window_open(href, 800, 450); return false;">
-                    <button type="button" class="btn btn-info btn-sm">
-                        Есть идея!
-                    </button>
-                </a>
 
 
                 <br>
@@ -33,43 +28,22 @@
                 <br>
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link show active" data-toggle="tab" href="#home"><abbr title="Заказ стандартного ЗиП">ЗиП</abbr></a>
+                        <a class="nav-link show active" data-toggle="tab" href="#home"><abbr title="Установка расходных материалов">Картриджи</abbr></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link show" data-toggle="tab" href="#profile"><abbr title="Заказ того, что не вошло в стандартный ЗиП, редкозаказываемые позиции">Произвольный</abbr></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link show" data-toggle="tab" href="#stationery"><abbr title="Тут понятно :-)">Канцелярия</abbr></a>
+                        <a class="nav-link show" data-toggle="tab" href="#stationery"><abbr title="Кабели, переходники, мышки, клавиатуры и тп">ЗиП</abbr></a>
                     </li>
                 </ul>
                 <div id="myTabContent" class="tab-content">
                     <div class="tab-pane fade active show" id="home">
 
-                        <form action="add_zip/" method="post" class="form">
-                            {% csrf_token %}
-                            <br>
-                            {% bootstrap_form form layout='horizontal' size='small' %}
 
-                            <button type="submit" class="btn btn-primary btn-sm">Добавить</button>
-                        </form>
                     </div>
                     <div class="tab-pane fade" id="profile">
-                        <form action="add_freezip/" method="post" class="form">
-                            {% csrf_token %}
-                            <br>
-                            {% bootstrap_form form_free layout='horizontal' size='small' %}
 
-                            <button type="submit" class="btn btn-primary btn-sm">Добавить</button>
-                        </form>
                     </div>
                     <div class="tab-pane fade" id="stationery">
-                        <form action="add_stationeryzip/" method="post" class="form">
-                            {% csrf_token %}
-                            <br>
-                            {% bootstrap_form form_stationery layout='horizontal' size='small' %}
 
-                            <button type="submit" class="btn btn-primary btn-sm">Добавить</button>
-                        </form>
                     </div>
 
                 </div>
@@ -79,21 +53,29 @@
                 <br>
                 <div class="alert alert-dismissible alert-primary">
 
-                    <h5>Текущий заказ № {{ current_order }}</h5>
-
-
+                    <h5>Состояние склада</h5>
                     <table class="table  table-hover table-sm" id="mTab">
                         <thead>
                         <tr>
                             <th scope="col" width="3%" >№</th>
                             <th scope="col" width="53%">Наименование</th>
-                            <th scope="col" width="32%">Комментарий</th>
-                            <th scope="col" width="10%">Количество</th>
+                            <th scope="col" width="32%">Неснижаемый остаток</th>
+                            <th scope="col" width="10%">Текущий остаток</th>
                             <th scope="col" class="-colLG" width="2%"></th>
                         </tr>
                         </thead>
                         <tbody>
+                                <tr>
+                                <td scope="row">1</td>
+                                <td >Q666X</td>
 
+                                <td >5</td>
+                                <td class="zip" id="{{ o.id }}">6</td>
+                                <td>
+                                    <a href="record_delete/{{ o.id }}"><button>Выдать</button></a>
+                                </td>
+
+                            </tr>
                         {% for o in order %}
                             <tr>
                                 <td scope="row">{{ forloop.counter }}</td>

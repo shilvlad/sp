@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'portal.apps.PortalConfig',
     'bootstrap4',
     'zip',
-#    'dev_test',
     'passes',
+    'supplies',
 ]
 
 MIDDLEWARE = [

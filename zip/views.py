@@ -30,7 +30,7 @@ def start(request):
     try:
         context['role'] = ZipUsers.objects.get(user=request.user.id).role
     except Exception:
-        return HttpResponse("START. Критическая ошибка контроля ролей. Обратитесь к администратору")
+        return HttpResponse("ZIP_START. Критическая ошибка контроля ролей. Обратитесь к администратору")
 
     if context['role'] == 'teamlead':
         try:
